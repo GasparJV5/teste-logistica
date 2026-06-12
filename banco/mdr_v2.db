@@ -1,0 +1,1 @@
+DB_PATH = BASE_DIR / "mdr_v2.db"

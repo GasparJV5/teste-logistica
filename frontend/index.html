@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MDR Ecosystem — Consolidado Refatorado</title>
+  <style>
+    :root{
+  --bg:#0f172a;
+  --bg2:#111827;
+  --panel:#1e293b;
+  --panel2:#0b1220;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --border:#334155;
+  --accent:#2563eb;
+  --accent2:#38bdf8;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --violet:#8b5cf6;
+  --radius:14px;
+  --shadow:0 10px 24px rgba(0,0,0,.18);
+}
+
+    *{box-sizing:border-box} html,body{margin:0;padding:0}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text,#e5e7eb);min-height:100vh}
+    .container{max-width:1850px;margin:0 auto;padding:18px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:rgba(15,23,42,.88);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+    .topbar h1{margin:0;font-size:1.45rem}.topbar small{display:block;margin-top:4px;color:var(--muted)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .tab-btn,.btn{border:1px solid var(--border);background:var(--panel2);color:var(--text,#e5e7eb);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    .tab-btn{color:var(--muted);padding:12px 18px;font-weight:800}.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+    .btn:hover{filter:brightness(1.06)} .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+    .btn-success{background:linear-gradient(135deg,#059669,#10b981);border-color:transparent;color:#fff}
+    .btn-danger{background:linear-gradient(135deg,#b91c1c,#ef4444);border-color:transparent;color:#fff}
+    .btn-warning{background:linear-gradient(135deg,#d97706,#f59e0b);border-color:transparent;color:#111827}.btn-small{padding:7px 10px;font-size:12px}
+    .page{display:none}.page.active{display:block}
+    .card{background:linear-gradient(180deg,rgba(30,41,59,.96),rgba(15,23,42,.96));border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+    .card h2,.card h3{margin-top:0}.subtext{color:var(--muted);font-size:13px}
+    .signal{font-size:12px;color:var(--muted);background:rgba(56,189,248,.08);border:1px dashed rgba(56,189,248,.35);padding:10px 12px;border-radius:10px;margin-bottom:14px}
+    .grid-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:18px}
+    .kpi{background:linear-gradient(180deg,rgba(30,41,59,.96),rgba(15,23,42,.96));border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);cursor:pointer}
+    .kpi h4{margin:0 0 8px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}.kpi p{margin:0;font-size:24px;font-weight:900}
+    .kpi.success{border-color:rgba(16,185,129,.35)}.kpi.warning{border-color:rgba(245,158,11,.35)}.kpi.danger{border-color:rgba(239,68,68,.35)}.kpi.info{border-color:rgba(56,189,248,.35)}.kpi.violet{border-color:rgba(139,92,246,.35)}
+    .split{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px}.form-grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .field{display:flex;flex-direction:column;gap:6px}.field label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800;letter-spacing:.4px}
+    input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text,#e5e7eb);outline:none;font:inherit}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(56,189,248,.12)} textarea{min-height:110px;resize:vertical}
+    .checkbox-wrap{display:flex;align-items:center;gap:8px;min-height:44px;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel2)} .checkbox-wrap input{width:auto}
+    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px} table{width:100%;border-collapse:collapse;min-width:1650px}
+    th,td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:top} th{background:var(--panel2);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.6px;position:sticky;top:0;z-index:1}
+    tr:hover td{background:rgba(255,255,255,.02)} .row-urgent td{background:rgba(239,68,68,0.15); border-left: 4px solid #ef4444;} .row-late td{box-shadow:inset 4px 0 0 rgba(245,158,11,.9)}
+    .input-inline,.select-inline{width:100%;padding:7px 8px;border-radius:8px;border:1px solid #475569;background:rgba(15,23,42,.96);color:var(--text,#e5e7eb);font-size:12px;outline:none}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+    .b-info{background:rgba(56,189,248,.12);color:#7dd3fc}.b-warning{background:rgba(245,158,11,.12);color:#fbbf24}.b-success{background:rgba(16,185,129,.12);color:#6ee7b7}.b-danger{background:rgba(239,68,68,.12);color:#fca5a5}.b-violet{background:rgba(139,92,246,.12);color:#c4b5fd}.b-muted{background:rgba(148,163,184,.16);color:#cbd5e1}
+    .muted{color:var(--muted)}.hidden{display:none !important}
+    .kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lane{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(11,18,32,.9);min-height:150px}.lane h4{margin:0 0 10px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+    .mini-card{padding:10px;border-radius:12px;background:rgba(30,41,59,.95);border:1px solid var(--border);margin-bottom:8px}.mini-card b{display:block;margin-bottom:4px}.mini-card small{color:var(--muted)}
+    .details-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.detail-box{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(11,18,32,.85)}.detail-box h5{margin:0 0 8px;font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}.detail-box pre{white-space:pre-wrap;margin:0;font-size:12px;color:var(--text,#e5e7eb);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .block-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.block-chip{border:1px solid var(--border);background:rgba(11,18,32,.85);border-radius:10px;padding:10px 12px;cursor:pointer;min-width:190px}.block-chip.active{border-color:var(--accent2);box-shadow:0 0 0 1px rgba(56,189,248,.35)}.block-chip .title{font-weight:800}.block-chip .meta{font-size:11px;color:var(--muted);margin-top:4px}
+    .history-cell{font-size:11px;line-height:1.45;max-width:280px;color:#cbd5e1}.status-col{display:flex;flex-direction:column;gap:6px}
+    details.archive-card{border:1px solid var(--border);border-radius:12px;background:rgba(11,18,32,.85);margin-bottom:12px;overflow:hidden} details.archive-card summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap} details.archive-card summary::-webkit-details-marker{display:none}.archive-summary-title{font-weight:800}.archive-summary-meta{font-size:12px;color:var(--muted);margin-top:4px}.archive-body{padding:0 16px 16px;border-top:1px solid var(--border)}
+    .modal-overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.72);z-index:1000}.modal-overlay.show{display:flex}.modal{width:min(1280px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,rgba(30,41,59,.98),rgba(15,23,42,.98));border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .status-flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
+    .status-step{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid var(--border);background:rgba(148,163,184,.10);color:var(--muted)}
+    .status-step.done{background:rgba(16,185,129,.12);color:#6ee7b7;border-color:rgba(16,185,129,.30)}
+    .status-step.current{background:rgba(56,189,248,.14);color:#7dd3fc;border-color:rgba(56,189,248,.35)}
+    .status-step.final{background:rgba(139,92,246,.12);color:#c4b5fd;border-color:rgba(139,92,246,.30)}
+    .flow-time{margin-top:8px;font-size:12px;color:var(--muted)}
+    .flow-inline{margin-top:6px}.flow-inline .status-step{font-size:10px;padding:4px 8px}
+    @media (max-width:1180px){.split,.form-grid-2{grid-template-columns:1fr}} @media (max-width:720px){.container{padding:12px}.topbar,.card{padding:14px}.tab-btn{width:100%;text-align:left}table{min-width:1450px}} @media print{.topbar,.tabs,.no-print,.modal-overlay{display:none !important}body{background:#fff;color:#111827}.card,.kpi,.lane,.detail-box,.table-wrap,.block-chip,details.archive-card{box-shadow:none;background:#fff;border-color:#d1d5db}th{position:static}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar no-print">
+      <div>
+        <h1>🌐 MDR Ecosystem — Consolidado Refatorado</h1>
+        <small>Operação diária, blocos, consulta consolidada e importação padronizada</small>
+      </div>
+      <div class="toolbar">
+        <button class="btn" onclick="App.exportJSON()">📤 Exportar JSON</button>
+        <label class="btn" for="importJsonFile">📥 Importar JSON</label>
+        <input id="importJsonFile" class="hidden" type="file" accept=".json" onchange="App.importJSON(event)">
+        <button class="btn" onclick="App.exportCSV()">📊 Exportar CSV Geral</button>
+        <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+        <button class="btn btn-danger" onclick="App.resetAll()">♻️ Limpar Base</button>
+      </div>
+       
+<div class="toolbar" style="margin-top:12px;">
+  <button class="btn btn-success" type="button" onclick="App.saveServer()">💾 Salvar no Servidor</button>
+  <button class="btn" type="button" onclick="App.loadServer()">📥 Carregar do Servidor</button>
+  <button class="btn btn-warning" type="button" onclick="App.backupServer()">🗂️ Gerar Backup</button>
+</div>
+
+    </header>
+
+    <nav class="tabs no-print">
+      <button class="tab-btn active" data-page="page1" onclick="App.switchPage('page1', event)">1. Operação / Blocos do Dia</button>
+      <button class="tab-btn" data-page="page3" onclick="App.switchPage('page3', event)">2. Gestão / Consulta</button>
+    </nav>
+
+    <section id="page1" class="page active">
+      <div class="signal no-print"><b>PÁGINA 1:</b> controle operacional diário por blocos, com duplicidade de pedido/NF, atraso de faturamento, fluxo visual e rastreabilidade.</div>
+
+      <div class="card">
+        <h2>Controle de Blocos por Dia</h2>
+        <p class="subtext">Cada dia representa um bloco operacional. Se já existir um bloco aberto na data, o sistema reaproveita o bloco.</p>
+        <div class="form-grid">
+          <div class="field"><label>Data do Bloco</label><input id="blockDate" type="date"></div>
+          <div class="field"><label>Observação do Bloco</label><input id="blockNote" type="text" placeholder="Ex: Operação da manhã / OPME"></div>
+          <div class="field" style="align-self:end;"><button class="btn btn-primary" type="button" onclick="App.createOrLoadBlock()">📂 Criar / Carregar Bloco</button></div>
+          <div class="field" style="align-self:end;"><button class="btn btn-warning" type="button" onclick="App.closeActiveBlock()">🔒 Fechar Bloco Atual</button></div>
+          <div class="field" style="align-self:end;"><button class="btn" type="button" onclick="App.printCurrentBlock()">🖨️ Relatórios do Bloco Atual</button></div>
+          <div class="field" style="align-self:end;"><button class="btn btn-danger" type="button" onclick="App.clearCurrentBlockEntries()">🧹 Limpar Entradas do Bloco</button></div>
+          <div class="field" style="align-self:end;">
+          <button class="btn btn-danger" type="button" onclick="App.deleteActiveBlock()">🗑️ Excluir Bloco</button>
+          </div>
+
+          </div> <!-- FECHA form-grid CORRETAMENTE -->
+
+<div style="margin-top:14px;">
+          <div class="subtext"><b>Blocos abertos</b></div>
+          <div id="openBlocksList" class="block-list"></div>
+        </div>
+      </div>
+
+      <div class="grid-kpi">
+        <div class="kpi info" onclick="App.openKpiModal('totalCriados')"><h4>Total de Pedidos Criados</h4><p id="kpiTotalCriados">0</p></div>
+        <div class="kpi info" onclick="App.openKpiModal('aguardandoReq')"><h4>Aguardando Requisição</h4><p id="kpiAguardandoReq">0</p></div>
+        <div class="kpi violet" onclick="App.openKpiModal('emSeparacao')"><h4>Em Separação</h4><p id="kpiEmSeparacao">0</p></div>
+        <div class="kpi success" onclick="App.openKpiModal('notasFaturadas')"><h4>Notas Faturadas</h4><p id="kpiNotasFaturadas">0</p></div>
+        <div class="kpi warning" onclick="App.openKpiModal('liberadosExpedicao')"><h4>Liberados</h4><p id="kpiLiberadosExpedicao">0</p></div>
+        <div class="kpi danger" onclick="App.openKpiModal('chamados')"><h4>Chamados</h4><p id="kpiChamadosP1">0</p></div>
+        <div class="kpi danger" onclick="App.openKpiModal('cancelados')"><h4>Cancelados</h4><p id="kpiCanceladosP1">0</p></div>
+      </div>
+
+      <div class="split">
+        <div>
+          <div class="card">
+            <h2>Cadastro / Entrada de Processo</h2>
+            <p class="subtext">Cria um processo dentro do bloco ativo do dia.</p>
+            <form id="processForm" onsubmit="event.preventDefault(); App.createProcess();">
+              <div class="form-grid">
+                <div class="field"><label>Data Entrada</label><input id="pDataEntrada" type="date"></div>
+                <div class="field"><label>Responsável</label><input id="pResponsavel" type="text" value="JOÃO VICTOR"></div>
+                <div class="field"><label>Operação</label><select id="pOperacao"><option>VENDA</option><option>DEVOLUÇÃO</option><option>COLETA</option><option>TRANSFERÊNCIA</option></select></div>
+                <div class="field"><label>Carga</label><input id="pCarga" type="text" placeholder="Lote / carga"></div>
+                <div class="field"><label>Pedido *</label><input id="pPedido" type="text" required placeholder="Ex: 45001234"></div>
+                <div class="field"><label>Destinatário / Hospital</label><input id="pDestinatario" type="text" placeholder="Nome do cliente / hospital"></div>
+                <div class="field"><label>UF</label><input id="pUf" type="text" maxlength="2" placeholder="PE" oninput="this.value=this.value.toUpperCase()"></div>
+                <div class="field"><label>Status Inicial</label><select id="pStatusInicial"></select></div>
+                <div class="field"><label>Urgente</label><div class="checkbox-wrap"><input id="pUrgente" type="checkbox"><span>Marcar como urgente</span></div></div>
+                <div class="field" style="grid-column:span 2;"><label>Observação Inicial</label><input id="pObs" type="text" placeholder="Comentário de abertura"></div>
+              </div>
+              <div class="toolbar" style="margin-top:14px;">
+                <button class="btn btn-primary" type="submit">💾 Salvar Processo</button>
+                <button class="btn" type="button" onclick="App.clearProcessForm()">🧹 Limpar Campos</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h2>Importação por Relatório (CSV)</h2>
+            <p class="subtext">Recebe o arquivo dos pedidos e monta/atualiza os blocos conforme a data do pedido.</p>
+            <div class="toolbar">
+              <label class="btn btn-success" for="csvImportFile">📥 Importar CSV</label>
+              <input id="csvImportFile" class="hidden" type="file" accept=".csv,text/csv" onchange="App.importCSV(event)">
+              <button class="btn" onclick="App.downloadCsvTemplate()">📄 Baixar Modelo CSV</button>
+            </div>
+            <div class="details-grid" style="margin-top:14px;">
+              <div class="detail-box"><h5>Modelo esperado</h5><pre>pedido;destinatario;uf;requisicao;nf;valor;status;operacao;dataEntrada;responsavel;carga;urgente;observacao;dataEmissao;sharePointLane;motivoAtraso</pre></div>
+              <div class="detail-box"><h5>Importação inteligente</h5><pre>• evita pedido repetido
+• evita NF repetida
+• reaproveita bloco do mesmo dia
+• mapeia colunas reais do relatório
+• valida datas, valores e campos obrigatórios</pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card"><h2>Painel de Cards / Colunas</h2><p class="subtext">Simulação visual das 3 colunas do SharePoint: LIBERADOS, EXPEDIDO e FINALIZADAS.</p><div id="kanbanBoard" class="kanban"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar" style="justify-content:space-between;">
+          <div><h2 style="margin-bottom:6px;">Operação Ativa</h2><div class="subtext">Os pedidos do dia ficam dentro do bloco ativo. Edite diretamente na linha.</div></div>
+          <div class="toolbar"><input id="page1Search" type="text" placeholder="🔎 Buscar pedido, cliente, NF..." oninput="App.renderPage1Table()"><select id="page1StatusFilter" onchange="App.renderPage1Table()"></select></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Bloco / Processo</th><th>Carga</th><th>Pedido / Cliente</th><th>UF</th><th>Documentos</th><th>Valor / Emissão</th><th>Modal</th><th>Status</th><th>Coluna SharePoint</th><th>Urgente</th><th>Obs.</th><th>Histórico</th><th class="no-print">Ações</th></tr></thead>
+            <tbody id="page1TableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="page3" class="page">
+      <div class="signal no-print"><b>PÁGINA 3:</b> painel calculado com base em todos os blocos criados.</div>
+      <div class="grid-kpi">
+        <div class="kpi info" onclick="App.openTimeKpiModal('createToRelease')"><h4>Média Criado × Liberado</h4><p id="kpiTempoCriadoLiberado">0h</p></div>
+        <div class="kpi success" onclick="App.openTimeKpiModal('untilConclusion')"><h4>Média Até Concluir</h4><p id="kpiTempoAteConcluir">0h</p></div>
+        <div class="kpi violet" onclick="App.openTimeKpiModal('createToSep')"><h4>Média Criado → Separação</h4><p id="kpiTempoCriadoSeparacao">0h</p></div>
+        <div class="kpi warning" onclick="App.openTimeKpiModal('sepToFat')"><h4>Média Separação → Faturamento</h4><p id="kpiTempoSeparacaoFaturamento">0h</p></div>
+        <div class="kpi info" onclick="App.openTimeKpiModal('fatToExp')"><h4>Média Faturamento → Expedição</h4><p id="kpiTempoFaturamentoExpedicao">0h</p></div>
+        <div class="kpi info" onclick="App.openTimeKpiModal('totalProc')"><h4>Total de Processos</h4><p id="kpiMgmtTotal">0</p></div>
+        <div class="kpi success" onclick="App.openTimeKpiModal('done')"><h4>Concluídos</h4><p id="kpiDoneMgmt">0</p></div>
+        <div class="kpi violet" onclick="App.openTimeKpiModal('faturadas')"><h4>Faturadas</h4><p id="kpiMgmtFaturadas">0</p></div>
+        <div class="kpi warning" onclick="App.openTimeKpiModal('emExp')"><h4>Expedido</h4><p id="kpiMgmtExp">0</p></div>
+        <div class="kpi danger" onclick="App.openTimeKpiModal('chamados')"><h4>Chamados</h4><p id="kpiMgmtChamados">0</p></div>
+        <div class="kpi danger" onclick="App.openTimeKpiModal('cancelados')"><h4>Cancelados</h4><p id="kpiMgmtCancelados">0</p></div>
+        <div class="kpi" onclick="App.openTimeKpiModal('urgent')"><h4>Urgentes</h4><p id="kpiUrgentes">0</p></div>
+      </div>
+      <div class="card no-print">
+        <h2>Filtros Gerenciais</h2>
+        <div class="form-grid">
+          <div class="field"><label>Busca Geral</label><input id="p3Search" type="text" placeholder="Pedido, cliente, NF, observação..." oninput="App.renderPage3()"></div>
+          <div class="field"><label>Status</label><select id="p3Status" onchange="App.renderPage3()"></select></div>
+          <div class="field"><label>Bloco / Data</label><input id="p3Date" type="date" onchange="App.renderPage3()"></div>
+          <div class="field"><label>Urgência</label><select id="p3Urgent" onchange="App.renderPage3()"><option value="">Todos</option><option value="SIM">Somente urgentes</option><option value="NAO">Somente não urgentes</option></select></div>
+          <div class="field"><label>Coluna SharePoint</label><select id="p3Lane" onchange="App.renderPage3()"><option value="">Todas</option><option value="LIBERADOS">LIBERADOS</option><option value="EXPEDIDO">EXPEDIDO</option><option value="FINALIZADAS">FINALIZADAS</option></select></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="toolbar" style="justify-content:space-between;">
+          <div><h2 style="margin-bottom:6px;">Consulta Consolidada</h2><div class="subtext">Visão unificada com foco em gestão, status, tempos e rastreabilidade.</div></div>
+          <div class="toolbar no-print"><button class="btn" onclick="App.printManagerReport()">📑 Relatório Gerencial</button></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Bloco / Processo</th><th>Pedido / Cliente</th><th>Docs</th><th>Coluna</th><th>Tempos</th><th>Responsável</th><th>Urgência</th><th>Rastreabilidade</th><th class="no-print">Detalhes</th></tr></thead><tbody id="page3TableBody"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="toolbar" style="justify-content:space-between;">
+          <div><h2 style="margin-bottom:6px;">Blocos Arquivados</h2><div class="subtext">Consulta histórica dos blocos fechados por dia.</div></div>
+          <div class="toolbar"><input id="archiveSearch" type="text" placeholder="🔎 Buscar por data, pedido, cliente..." oninput="App.renderArchivedBlocks()"></div>
+        </div>
+        <div id="archivedBlocksContainer"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="detailsModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div><h2 id="detailsTitle" style="margin:0;">Detalhes</h2><div class="muted">Histórico, tempos, documentos e listagens</div></div>
+        <button class="btn btn-danger" onclick="App.closeDetails()">Fechar</button>
+      </div>
+      <div id="detailsContent"></div>
+    </div>
+  </div>
+ 
+
+  <script>
+   
+   
+const App = {
+  storageKey: 'mdr_ecosystem_consolidado_refatorado_v1',
+  backupKey: 'mdr_ecosystem_consolidado_refatorado_v1_backup',
+  statuses: ['NOVO','AGUARDANDO REQUISIÇÃO','EM SEPARAÇÃO','NF INFORMADA','LIBERADO','EXPEDIDO','CONCLUÍDO','CHAMADO','CANCELADO'],
+  sharePointLanes: ['LIBERADOS','EXPEDIDO','FINALIZADAS'],
+  db: { blocks: [], analyses: [], imports: [], activeBlockId: null, counters: { processSeq: 0, analysisSeq: 0 } },
+
+// Controle de sincronização (Opção A)
+syncStateKey: 'mdr_ecosystem_sync_state_v1',
+dbDirty: false,
+backupDirty: false,
+lastDbSyncAt: '',
+lastBackupAt: '',
+dbSyncIntervalMs: 2 * 60 * 1000,         // 2 minutos
+backupIntervalMs: 24 * 60 * 60 * 1000,   // 1 dia
+_dbSyncTimer: null,
+_backupTimer: null,
+
+delayedBillingPromptOpen: false,
+  csvFieldAliases:{
+    pedido:['pedido','numeropedido','pedidoerp','numped'],
+    destinatario:['destinatario','hospital','cliente','nomecliente'],
+    uf:['uf','estado'],
+    requisicao:['requisicao','req','numreq'],
+    nf:['nf','nota','numeronf','notafiscal'],
+    valor:['valor','valornf','valornota','totalnf','total'],
+    status:['status','situacao'],
+    operacao:['operacao','tipooperacao'],
+    dataEntrada:['dataentrada','datapedido','data','dtpedido'],
+    responsavel:['responsavel','usuario','analista'],
+    carga:['carga','lote'],
+    urgente:['urgente','prioridade'],
+    observacao:['observacao','obs','comentario'],
+    dataEmissao:['dataemissao','dtemissao','emissao'],
+    sharePointLane:['sharepointlane','lane','coluna','colunasharepoint'],
+    motivoAtraso:['motivoatraso','motivodemora','motivo']
+  },
+
+  getEl(id){ return typeof document !== 'undefined' ? document.getElementById(id) : null; },
+  nowIso(){ return new Date().toISOString(); },
+  toDateInput(date){ const d = new Date(date); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; },
+  parseLocalDate(s){ if(!s || !/^\d{4}-\d{2}-\d{2}$/.test(String(s))) return null; const [y,m,d] = String(s).split('-').map(Number); return new Date(y,m-1,d); },
+  parseDateFlex(v){ if(!v) return ''; const s = String(v).trim(); if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s; if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)){ const [d,m,y] = s.split('/'); return `${y}-${m}-${d}`; } if(/^\d{2}-\d{2}-\d{4}$/.test(s)){ const [d,m,y] = s.split('-'); return `${y}-${m}-${d}`; } const dt = new Date(s); return isNaN(dt.getTime()) ? this.toDateInput(new Date()) : this.toDateInput(dt); },
+  fmtDate(v){ if(!v) return '-'; if(typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)){ const d = this.parseLocalDate(v); return d ? d.toLocaleDateString('pt-BR') : v; } const d = new Date(v); return isNaN(d.getTime()) ? v : d.toLocaleDateString('pt-BR'); },
+  fmtDateTime(v){ if(!v) return '-'; const d = new Date(v); return isNaN(d.getTime()) ? v : d.toLocaleString('pt-BR'); },
+  fmtMoney(v){ return Number(v || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); },
+  
+  escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+},
+
+  normalizeText(v){ return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase(); },
+  normalizeHeader(v){ return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'').replace(/[^a-zA-Z0-9]/g,'').toLowerCase(); },
+  toCSVSafe(v){ return `"${String(v ?? '').replaceAll('"','""')}"`; },
+  parseCsvLine(line, delimiter){ const out=[]; let cur=''; let inQuotes=false; for(let i=0;i<line.length;i++){ const ch=line[i], next=line[i+1]; if(ch==='"'){ if(inQuotes && next==='"'){ cur+='"'; i++; } else { inQuotes=!inQuotes; } } else if(ch===delimiter && !inQuotes){ out.push(cur); cur=''; } else { cur+=ch; } } out.push(cur); return out.map(v => v.trim()); },
+  hoursBetween(start, end){ if(!start) return 0; const s=new Date(start).getTime(), e=end?new Date(end).getTime():Date.now(); if(!isFinite(s)||!isFinite(e)) return 0; return (e-s)/36e5; },
+  formatHours(h){ return `${Number(h || 0).toFixed(1)}h`; },
+  makeHistory(type, text, meta={}){ return { id: Date.now()+Math.floor(Math.random()*1000), type, text, meta, date: this.nowIso() }; },
+  normalizeStatus(v){ const t=this.normalizeText(v); if(t==='NOVO') return 'NOVO'; if(t==='AGUARDANDOREQUISICAO') return 'AGUARDANDO REQUISIÇÃO'; if(t==='EMSEPARACAO') return 'EM SEPARAÇÃO'; if(t==='NFINFORMADA') return 'NF INFORMADA'; if(t==='LIBERADAPARAEXPEDICAO' || t==='LIBERADO') return 'LIBERADO'; if(t==='EMEXPEDICAO' || t==='EXPEDIDO') return 'EXPEDIDO'; if(t==='CONCLUIDO') return 'CONCLUÍDO'; if(t==='CHAMADO') return 'CHAMADO'; if(t==='CANCELADO') return 'CANCELADO'; return ''; },
+  normalizeLane(v){
+  const t = this.normalizeText(v);
+
+  if(t === 'LIBERADOS' || t === 'LIBERADAS') return 'LIBERADOS';
+  if(t === 'EXPEDIDO' || t === 'EMEXPEDICAO') return 'EXPEDIDO';
+  if(t === 'FINALIZADAS' || t === 'FINALIZADO') return 'FINALIZADAS';
+
+  return '';
+  },
+  nextProcessCode(){ this.db.counters = this.db.counters || { processSeq: 0, analysisSeq: 0 }; this.db.counters.processSeq = Number(this.db.counters.processSeq || 0) + 1; return `MDR-${new Date().getFullYear()}-${String(this.db.counters.processSeq).padStart(6,'0')}`; },
+  saveSyncState(){
+    if(typeof localStorage === 'undefined') return;
+    try{
+      const state = {
+        dbDirty: this.dbDirty,
+        backupDirty: this.backupDirty,
+        lastDbSyncAt: this.lastDbSyncAt || '',
+        lastBackupAt: this.lastBackupAt || ''
+      };
+      localStorage.setItem(this.syncStateKey, JSON.stringify(state));
+    }catch(e){
+      console.warn('Falha ao salvar estado de sincronização', e);
+    }
+  },
+
+  loadSyncState(){
+    if(typeof localStorage === 'undefined') return;
+    try{
+      const raw = localStorage.getItem(this.syncStateKey);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      this.dbDirty = Boolean(parsed?.dbDirty);
+      this.backupDirty = Boolean(parsed?.backupDirty);
+      this.lastDbSyncAt = parsed?.lastDbSyncAt || '';
+      this.lastBackupAt = parsed?.lastBackupAt || '';
+    }catch(e){
+      console.warn('Falha ao carregar estado de sincronização', e);
+    }
+  },
+
+  markPendingChanges(){
+    this.dbDirty = true;
+    this.backupDirty = true;
+    this.saveSyncState();
+  },
+
+  async syncDatabaseIfNeeded(force = false){
+    if(!force && !this.dbDirty){
+      console.log('⏭️ Banco: sem alterações pendentes.');
+      return { skipped: true, reason: 'no_db_changes' };
+    }
+
+    try{
+      const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+
+      const response = await fetch(`${apiBase}/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
+      });
+
+      const data = await response.json();
+
+      if(!response.ok){
+        throw new Error(data.message || 'Falha ao sincronizar banco.');
+      }
+
+      this.dbDirty = false;
+      this.lastDbSyncAt = new Date().toISOString();
+      this.saveSyncState();
+
+      console.log('✅ Banco sincronizado com sucesso.');
+      return data;
+    }catch(error){
+      console.error('❌ Erro ao sincronizar banco:', error);
+      throw error;
+    }
+  },
+
+  async syncBackupIfNeeded(force = false){
+    if(!force && !this.backupDirty){
+      console.log('⏭️ Backup: sem alterações pendentes.');
+      return { skipped: true, reason: 'no_backup_changes' };
+    }
+
+    try{
+      const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+
+      const response = await fetch(`${apiBase}/backup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
+      });
+
+      const data = await response.json();
+
+      if(!response.ok){
+        throw new Error(data.message || 'Falha ao gerar backup.');
+      }
+
+      // backup também salva banco no backend
+      this.dbDirty = false;
+      this.backupDirty = false;
+      this.lastDbSyncAt = new Date().toISOString();
+      this.lastBackupAt = new Date().toISOString();
+      this.saveSyncState();
+
+      console.log('✅ Backup sincronizado com sucesso.');
+      return data;
+    }catch(error){
+      console.error('❌ Erro ao gerar backup:', error);
+      throw error;
+    }
+  },
+
+  startSyncSchedulers(){
+  this._lastHash = JSON.stringify(this.db.blocks || []);
+
+  if(this._serverHashTimer) clearInterval(this._serverHashTimer);
+  if(this._dbSyncTimer) clearInterval(this._dbSyncTimer);
+  if(this._backupTimer) clearInterval(this._backupTimer);
+
+  this._serverHashTimer = setInterval(() => {
+    if (this.dbDirty) return;
+
+    fetch(`${API_BASE}/hash`)
+      .then(r => r.json())
+      .then(server => {
+        if(server.hash !== this._lastHash){
+          this.loadServer(false);
+        }
+      })
+      .catch(() => {});
+  }, 10000);
+
+  this._dbSyncTimer = setInterval(() => {
+    this.syncDatabaseIfNeeded(false).catch(err => {
+      console.warn('Falha na sincronização do banco:', err.message);
+    });
+  }, this.dbSyncIntervalMs);
+
+  this._backupTimer = setInterval(() => {
+    this.syncBackupIfNeeded(false).catch(err => {
+      console.warn('Falha na sincronização do backup:', err.message);
+    });
+  }, this.backupIntervalMs);
+
+  console.log('⏱️ Agendadores iniciados: banco 2 min / backup 1 dia');
+},
+
+  shouldRunBackupOnStartup(){
+  if(!this.backupDirty) return false;
+
+  // Se nunca houve backup registrado, deixa o timer cuidar depois
+  // (se quiser forçar backup na primeira abertura, posso te passar outra versão)
+  if(!this.lastBackupAt) return false;
+
+  const last = new Date(this.lastBackupAt).getTime();
+  if(!isFinite(last)) return true;
+
+  const elapsed = Date.now() - last;
+  return elapsed >= this.backupIntervalMs;
+},
+async saveSafe(){
+  try{
+    // 1) Salva local imediatamente
+    localStorage.setItem(this.storageKey, JSON.stringify(this.db));
+    localStorage.setItem(this.backupKey, JSON.stringify(this.db));
+
+    // 2) Marca que há pendência para banco e backup
+    this.markPendingChanges();
+
+// 🔥 NOVO: salva automaticamente no servidor
+
+clearTimeout(this._saveTimer);
+
+this._saveTimer = setTimeout(() => {
+  this.syncDatabaseIfNeeded(true);
+}, 1000); // 1 segundo
+
+
+
+    console.log('💾 Alteração salva localmente. Aguardando sincronização.');
+  }catch(e){
+    console.warn('⚠️ Falha ao salvar localmente.', e);
+  }
+},
+
+
+async fetchWithTimeout(url, options = {}, timeout = 5001){
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try{
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+},
+
+async loadFromServer(){
+  try{
+    const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+    const res = await this.fetchWithTimeout(`${apiBase}/load`);
+    const payload = await res.json();
+
+    if(payload && payload.data && (!this.db.blocks || !this.db.blocks.length)){
+      const incoming = payload.data;
+
+      this.db = {
+        blocks: Array.isArray(incoming.blocks) ? incoming.blocks : [],
+        analyses: Array.isArray(incoming.analyses) ? incoming.analyses : [],
+        imports: Array.isArray(incoming.imports) ? incoming.imports : [],
+        activeBlockId: incoming.activeBlockId ?? null,
+        counters: incoming.counters ?? { processSeq: 0, analysisSeq: 0 }
+      };
+
+      console.log('✅ Dados carregados do servidor:', payload.source);
+      return;
+    }
+
+    return;
+  }
+  catch(e){
+    console.warn('⚠️ Backend indisponível, usando localStorage');
+  }
+
+  this.load();
+},
+
+
+renderAll(){
+  this.fillStatusSelects();
+  this.renderOpenBlocks();
+  this.renderPage1KPIs();
+  this.renderPage1Table();
+  this.renderKanban();
+  this.renderPage3KPIs();
+  this.renderPage3();
+  this.renderArchivedBlocks();
+},
+
+
+  load(){ if(typeof localStorage==='undefined') return; const read = key => { try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }; const raw = read(this.storageKey) || read(this.backupKey); if(raw && typeof raw === 'object'){ this.db.blocks = Array.isArray(raw.blocks) ? raw.blocks : []; this.db.analyses = Array.isArray(raw.analyses) ? raw.analyses : []; this.db.imports = Array.isArray(raw.imports) ? raw.imports : []; this.db.activeBlockId = raw.activeBlockId || null; this.db.counters = raw.counters || { processSeq: 0, analysisSeq: 0 }; } },
+  migrateData(){ this.db.counters = this.db.counters || { processSeq: 0, analysisSeq: 0 }; let maxProc=Number(this.db.counters.processSeq || 0); this.db.blocks = (this.db.blocks || []).map(block => { const safe={...block}; safe.note = safe.note || ''; safe.history = Array.isArray(safe.history) ? safe.history : []; safe.entries = (safe.entries || []).map(p => { const item = this.ensureProcessDefaults(p); const m=String(item.processCode || '').match(/-(\d{6})$/); if(m) maxProc = Math.max(maxProc, Number(m[1])); return item; }); return safe; }); this.db.counters.processSeq = maxProc; },
+  ensureProcessDefaults(p){ const process = {...p}; process.id = process.id || (Date.now()+Math.floor(Math.random()*1000)); process.processCode = process.processCode || this.nextProcessCode(); process.dataEntrada = process.dataEntrada || this.toDateInput(new Date()); process.createdAt = process.createdAt || this.nowIso(); process.updatedAt = process.updatedAt || this.nowIso(); process.finishedAt = process.finishedAt || null; process.responsavel = process.responsavel || 'NÃO INFORMADO'; process.operacao = process.operacao || 'VENDA'; process.carga = process.carga || ''; process.pedido = process.pedido || ''; process.destinatario = process.destinatario || ''; process.uf = String(process.uf || '').toUpperCase(); process.urgente = Boolean(process.urgente); process.requisicao = process.requisicao || ''; process.nf = process.nf || ''; process.valorNf = Number(process.valorNf || 0); process.dataEmissao = process.dataEmissao || ''; const normalizedStatus = this.normalizeStatus(process.status); process.status = normalizedStatus || process.status || 'AGUARDANDO REQUISIÇÃO'; process.previousStatus = process.previousStatus || ''; process.sharePointLane = process.sharePointLane || ''; process.obs = process.obs || ''; process.history = Array.isArray(process.history) ? process.history : []; process.stageTimeline = Array.isArray(process.stageTimeline) ? process.stageTimeline : []; process.currentStatusStartedAt = process.currentStatusStartedAt || process.createdAt || this.nowIso(); process.origin = process.origin || 'MANUAL'; process.conferenciaData = process.conferenciaData || ''; process.conferenciaAssinatura = process.conferenciaAssinatura || ''; process.expedicaoData = process.expedicaoData || ''; process.expedicaoAssinatura = process.expedicaoAssinatura || ''; process.delayReason = process.delayReason || ''; process.delayReasonRequestedAt = process.delayReasonRequestedAt || ''; process.calledInfo = process.calledInfo || { ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }; process.calledUpdatedAt = process.calledUpdatedAt || ''; process.calledLastReminderAt = process.calledLastReminderAt || ''; process.cancelReason = process.cancelReason || ''; process.modal = this.calculateModal(process.uf, process.nf); process.sharePointLane = this.deriveLaneFromFields(process) || process.sharePointLane || ''; if(!process.stageTimeline.length){ process.stageTimeline.push({ id: Date.now()+Math.floor(Math.random()*1000), status: process.status, start: process.currentStatusStartedAt, end: null, durationHours: 0 }); } return process; },
+  ensureDefaults(){ const today=this.toDateInput(new Date()); const blockDate=this.getEl('blockDate'), pDataEntrada=this.getEl('pDataEntrada'); if(blockDate && !blockDate.value) blockDate.value=today; if(pDataEntrada && !pDataEntrada.value) pDataEntrada.value=today; if(!this.db.activeBlockId){ const open=this.getOpenBlockByDate(today) || this.getOpenBlocks()[0]; if(open) this.db.activeBlockId=open.id; } },
+  
+async init(){
+  // 1) Carrega base local
+  this.load();
+
+  // 2) Carrega estado de sincronização
+  this.loadSyncState();
+
+  const hasLocalData = Array.isArray(this.db.blocks) && this.db.blocks.length > 0;
+
+  // 3) Se não houver base local, tenta carregar do servidor
+  if(!hasLocalData){
+    try{
+      
+    await this.loadFromServer();
+    this.renderAll();
+
+    } catch(e){
+      console.error("erro load", e);
+    }
+  }
+
+  this.migrateData();
+  this.ensureDefaults();
+  this.renderAll();
+
+  // 4) Inicia agendadores
+  this.startSyncSchedulers();
+
+  // 5) Na abertura:
+  // - se o backup estiver pendente E já passou 1 dia desde o último backup, faz backup
+  // - senão, se o banco estiver pendente, sincroniza banco
+  if(this.shouldRunBackupOnStartup()){
+    this.syncBackupIfNeeded(false).catch(err => {
+      console.warn('Falha ao sincronizar backup na abertura:', err.message);
+    });
+  } else if(this.dbDirty){
+    this.syncDatabaseIfNeeded(false).catch(err => {
+      console.warn('Falha ao sincronizar banco na abertura:', err.message);
+    });
+  }
+},
+
+// salva só manual
+ 
+// setInterval removido
+
+ switchPage(pageId,event){ if(typeof document==='undefined') return; document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); this.getEl(pageId).classList.add('active'); if(event) event.target.classList.add('active'); },
+
+  getOpenBlocks(){ return this.db.blocks.filter(b => !b.archived).sort((a,b)=>a.date.localeCompare(b.date)); },
+  getArchivedBlocks(){ return this.db.blocks.filter(b => b.archived).sort((a,b)=>new Date(b.closedAt||0)-new Date(a.closedAt||0)); },
+  getBlock(id){ return this.db.blocks.find(b => Number(b.id)===Number(id)); },
+  getActiveBlock(){ return this.getBlock(this.db.activeBlockId); },
+  getOpenBlockByDate(date){ return this.db.blocks.find(b => b.date===date && !b.archived); },
+  getAllProcesses(){ return this.db.blocks.flatMap(block => (block.entries || []).map(entry => ({...entry, blockId:block.id, blockDate:block.date, archived:block.archived}))); },
+  getProcess(id){ for(const block of this.db.blocks){ const found=(block.entries || []).find(p => Number(p.id)===Number(id)); if(found) return { process: found, block }; } return null; },
+  getDuplicatePedido(pedido, exceptId=null){ const norm=this.normalizeText(pedido); if(!norm) return null; return this.getAllProcesses().find(p => Number(p.id)!==Number(exceptId) && this.normalizeText(p.pedido)===norm) || null; },
+  getDuplicateNf(nf, exceptId=null){ const norm=this.normalizeText(nf); if(!norm) return null; return this.getAllProcesses().find(p => Number(p.id)!==Number(exceptId) && this.normalizeText(p.nf)===norm) || null; },
+
+  createBlock(date,note=''){ const existing=this.getOpenBlockByDate(date); if(existing) return existing; if(this.db.blocks.find(b => b.date===date && b.archived)) return null; const block={ id: Date.now()+Math.floor(Math.random()*1000), date, note, createdAt:this.nowIso(), closedAt:null, archived:false, entries:[], history:[this.makeHistory('BLOCO','Bloco criado.',{date})] }; this.db.blocks.push(block); this.saveSafe(); return block; },
+  createOrLoadBlock(){ const date=(this.getEl('blockDate')?.value) || this.toDateInput(new Date()); const note=(this.getEl('blockNote')?.value || '').trim(); if(this.db.blocks.find(b => b.date===date && b.archived)){ alert('Já existe um bloco FECHADO para essa data. Consulte a aba de Gestão / Arquivados.'); return; } let block=this.getOpenBlockByDate(date); if(!block){ block=this.createBlock(date,note); if(!block){ alert('Não foi possível criar o bloco.'); return; } } else if(note){ block.note=note; block.history.unshift(this.makeHistory('BLOCO', `Observação do bloco atualizada para: ${note}`)); } this.db.activeBlockId=block.id; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=block.date; this.saveSafe(); this.renderAll(); },
+  activateBlock(blockId){ const block=this.getBlock(blockId); if(!block || block.archived) return; this.db.activeBlockId=block.id; if(this.getEl('blockDate')) this.getEl('blockDate').value=block.date; if(this.getEl('blockNote')) this.getEl('blockNote').value=block.note || ''; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=block.date; this.renderAll(); },
+  renderOpenBlocks(){ const wrap=this.getEl('openBlocksList'); if(!wrap) return; const blocks=this.getOpenBlocks(); const activeId=this.db.activeBlockId; if(!blocks.length){ wrap.innerHTML='<div class="muted">Nenhum bloco aberto. Crie ou carregue um bloco para começar.</div>'; return; } wrap.innerHTML=blocks.map(block => `<div class="block-chip ${Number(activeId)===Number(block.id)?'active':''}" onclick="App.activateBlock(${block.id})"><div class="title">📅 ${App.fmtDate(block.date)}</div><div class="meta">${block.entries.length} pedido(s) • ${App.escapeHtml(block.note || 'Sem observação')}</div></div>`).join(''); },
+  closeActiveBlock(){ const block=this.getActiveBlock(); if(!block){ alert('Nenhum bloco ativo.'); return; } if(!confirm(`Fechar o bloco de ${this.fmtDate(block.date)}?`)) return; block.archived=true; block.closedAt=this.nowIso(); block.history.unshift(this.makeHistory('BLOCO', `Bloco fechado com ${block.entries.length} processo(s).`)); block.entries.forEach(p => { if(!['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)) p.history.unshift(this.makeHistory('BLOCO', `Bloco ${block.date} fechado com processo ainda aberto no status ${p.status}.`)); p.updatedAt=this.nowIso(); }); this.db.activeBlockId=null; const nextOpen=this.getOpenBlocks()[0]; if(nextOpen){ this.db.activeBlockId=nextOpen.id; if(this.getEl('blockDate')) this.getEl('blockDate').value=nextOpen.date; if(this.getEl('blockNote')) this.getEl('blockNote').value=nextOpen.note || ''; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=nextOpen.date; } this.saveSafe(); this.renderAll(); },
+  clearCurrentBlockEntries(){ const block=this.getActiveBlock(); if(!block){ alert('Nenhum bloco ativo.'); return; } if(!confirm(`Apagar todos os processos do bloco ${this.fmtDate(block.date)}?`)) return; block.entries=[]; block.history.unshift(this.makeHistory('BLOCO','Todas as entradas do bloco foram apagadas.')); this.saveSafe(); this.renderAll(); },
+  deleteActiveBlock(){
+  const block = this.getActiveBlock();
+
+  if(!block){
+    alert('Nenhum bloco atual ativo.');
+    return;
+  }
+
+  if(block.archived){
+    alert('O bloco atual está arquivado e não pode ser excluído.');
+    return;
+  }
+
+  const confirmDelete = confirm(
+    `Deseja excluir o BLOCO ATUAL de ${this.fmtDate(block.date)}?\n\n` +
+    `Todos os processos vinculados serão apagados permanentemente.`
+  );
+
+  if(!confirmDelete) return;
+
+  const deletedId = block.id;
+
+  this.db.blocks = this.db.blocks.filter(
+    b => Number(b.id) !== Number(deletedId)
+  );
+
+  const nextOpen = this.getOpenBlocks()[0] || null;
+  this.db.activeBlockId = nextOpen ? nextOpen.id : null;
+
+  if(this.getEl('blockDate')){
+    this.getEl('blockDate').value = nextOpen
+      ? nextOpen.date
+      : this.toDateInput(new Date());
+  }
+
+  if(this.getEl('blockNote')){
+    this.getEl('blockNote').value = nextOpen
+      ? (nextOpen.note || '')
+      : '';
+  }
+
+  if(this.getEl('pDataEntrada')){
+    this.getEl('pDataEntrada').value = nextOpen
+      ? nextOpen.date
+      : this.toDateInput(new Date());
+  }
+
+  alert('Bloco atual excluído com sucesso.');
+  this.saveSafe();
+  this.renderAll();
+},
+  fillStatusSelects(){ const statusOptions=this.statuses.map(s => `<option value="${this.escapeHtml(s)}">${this.escapeHtml(s)}</option>`).join(''); const pStatus=this.getEl('pStatusInicial'), p1=this.getEl('page1StatusFilter'), p3=this.getEl('p3Status'); const v1=pStatus?pStatus.value:'NOVO', v2=p1?p1.value:'', v3=p3?p3.value:''; if(pStatus){ pStatus.innerHTML=statusOptions; pStatus.value=this.statuses.includes(v1)?v1:'NOVO'; } if(p1){ p1.innerHTML=`<option value="">Todos os status</option>${statusOptions}`; p1.value=this.statuses.includes(v2)?v2:''; } if(p3){ p3.innerHTML=`<option value="">Todos</option>${statusOptions}`; p3.value=this.statuses.includes(v3)?v3:''; } },
+
+  calculateModal(uf,nf){ const UF=this.normalizeText(uf); if(!UF || !String(nf||'').trim()) return '---'; if(UF==='PE') return 'INTERESTADUAL'; if(UF==='PB') return 'RODOVIÁRIO'; return 'AÉREO'; },
+  deriveLaneFromFields(p){
+  if(['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)) return 'FINALIZADAS';
+  if(p.status === 'EXPEDIDO') return 'EXPEDIDO';
+  if(p.status === 'LIBERADO') return 'LIBERADOS';
+  if(Number(p.valorNf || 0) > 0 && String(p.nf || '').trim()) return 'LIBERADOS';
+  return '';
+  },
+  getCurrentHours(p){ return p.currentStatusStartedAt ? this.hoursBetween(p.currentStatusStartedAt, null) : 0; },
+  getTotalHours(p){ return this.hoursBetween(p.createdAt, p.finishedAt || null); },
+  getFirstStageStart(p,status){ const stage=(p.stageTimeline || []).find(s => s.status===status); return stage ? stage.start : ''; },
+  getReleaseTimestamp(p){ return this.getFirstStageStart(p,'LIBERADO'); },
+  todayKey(){ return this.toDateInput(new Date()); },
+  getStageStart(process, status){ const stage = (process.stageTimeline || []).find(s => s.status === status); return stage ? stage.start : ''; },
+  getDurationBetweenStages(process, statusA, statusB){ const startA = this.getStageStart(process, statusA); const startB = this.getStageStart(process, statusB); if(!startA || !startB) return null; const a = new Date(startA).getTime(); const b = new Date(startB).getTime(); if(!isFinite(a) || !isFinite(b) || b < a) return null; return (b - a) / 36e5; },
+  avg(arr){ if(!Array.isArray(arr) || !arr.length) return 0; return arr.reduce((s,v) => s + Number(v || 0), 0) / arr.length; },
+  getSlaHours(status){ const map={ 'NOVO':2, 'AGUARDANDO REQUISIÇÃO':12, 'EM SEPARAÇÃO':12, 'NF INFORMADA':6, 'LIBERADO':6, 'EXPEDIDO':24, 'CHAMADO':8 }; return map[status] || 24; },
+  isBillingPending(p){ return String(p.requisicao||'').trim() && (!String(p.nf||'').trim() || Number(p.valorNf||0)<=0 || !String(p.dataEmissao||'').trim()) && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status); },
+  isBillingLate(p){ return this.isBillingPending(p) && this.hoursBetween(p.createdAt,null) >= 24; },
+  closeCurrentTimelineStage(p){ const open=[...(p.stageTimeline||[])].reverse().find(x => !x.end); if(!open) return; open.end=this.nowIso(); open.durationHours=this.hoursBetween(open.start,open.end); },
+  openNewTimelineStage(p,status){ p.currentStatusStartedAt=this.nowIso(); p.stageTimeline.push({ id: Date.now()+Math.floor(Math.random()*1000), status, start:p.currentStatusStartedAt, end:null, durationHours:0 }); },
+  validateStatusTransition(p, target){ const order = ['NOVO','AGUARDANDO REQUISIÇÃO','EM SEPARAÇÃO','NF INFORMADA','LIBERADO','EXPEDIDO','CONCLUÍDO']; const currentIndex = order.indexOf(p.status); const targetIndex = order.indexOf(target); if (targetIndex !== -1 && currentIndex !== -1 && targetIndex < currentIndex) return { ok:false, message:`Não é permitido voltar de ${p.status} para ${target}.` }; if (target === 'EM SEPARAÇÃO' && !String(p.requisicao||'').trim()) return {ok:false,message:'Não é permitido ir para EM SEPARAÇÃO sem Requisição.'}; if (target === 'NF INFORMADA' && !String(p.nf||'').trim()) return {ok:false,message:'Não é permitido ir para NF INFORMADA sem NF.'}; if (target === 'LIBERADO' && (!String(p.nf||'').trim() || !String(p.dataEmissao||'').trim())) return {ok:false,message:'LIBERADO exige NF e Data de Emissão.'}; if (target === 'EXPEDIDO' && !String(p.nf||'').trim()) return {ok:false,message:'EXPEDIDO exige NF.'}; if (target === 'CONCLUÍDO' && (!String(p.nf||'').trim() || !String(p.dataEmissao||'').trim())) return {ok:false,message:'CONCLUÍDO exige NF e Data de Emissão.'}; return {ok:true}; },
+  getImportedValue(row, aliases){ for(const key of aliases){ if(row[key] !== undefined && row[key] !== null && String(row[key]).trim() !== '') return String(row[key]).trim(); } return ''; },
+  parseMoneyFlex(v){ if(v === null || v === undefined) return 0; const s = String(v).trim(); if(!s) return 0; const normalized = s.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, ''); const n = Number(normalized); return isNaN(n) ? 0 : n; },
+
+  getVisualFlowStages(){ return ['AGUARDANDO REQUISIÇÃO','EM SEPARAÇÃO','NF INFORMADA','LIBERADO','EXPEDIDO','CONCLUÍDO']; },
+  renderStatusFlow(process, compact=false){ const steps = this.getVisualFlowStages(); const currentIndex = steps.indexOf(process.status); const currentHours = this.getCurrentHours(process); const htmlSteps = steps.map((step, idx) => { let cls = 'status-step'; if(process.status === step){ cls += ' current'; } else if(currentIndex > idx){ cls += ' done'; } if(step === 'CONCLUÍDO' && process.status === 'CONCLUÍDO') cls += ' final'; return `<span class="${cls}">${this.escapeHtml(step)}</span>`; }).join(''); return `<div class="${compact ? 'flow-inline' : ''}"><div class="status-flow">${htmlSteps}</div><div class="flow-time">Etapa atual: <b>${this.escapeHtml(process.status)}</b> • Tempo na etapa: <b>${this.formatHours(currentHours)}</b></div></div>`; },
+ 
+openCalledPrompt(process, mode='new'){
+  const previous = process.calledInfo || { ticketNumber:'', reason:'' };
+
+  const ticketNumber = window.prompt('Número do chamado:', previous.ticketNumber || '');
+  if(ticketNumber === null) return null;
+
+  const reason = window.prompt('Motivo do chamado:', previous.reason || '');
+  if(reason === null || !String(reason).trim()){
+    alert('O motivo do chamado é obrigatório.');
+    return null;
+  }
+
+  return {
+    ticketNumber: String(ticketNumber || '').trim(),
+    reason: String(reason || '').trim(),
+    progressCurrent: '',
+    progressHistory: []
+  };
+},
+  checkCalledFollowUps(){ if(typeof window === 'undefined') return; const today = this.todayKey(); const pending = this.getAllProcesses().find(p => { if(p.archived) return false; if(p.status !== 'CHAMADO') return false; return (p.calledLastReminderAt || '') !== today; }); if(!pending) return; const ref = this.getProcess(pending.id); if(!ref || ref.block.archived) return; const process = ref.process; const confirmUpdate = window.confirm(`O pedido ${process.pedido} continua em CHAMADO.\nDeseja atualizar o andamento agora?`); process.calledLastReminderAt = today; if(confirmUpdate){ const newCalledInfo = this.openCalledPrompt(process, 'reminder'); if(newCalledInfo){ process.calledInfo = newCalledInfo; process.calledUpdatedAt = this.nowIso(); process.history.unshift(this.makeHistory('CHAMADO', `Chamado atualizado. Nº ${newCalledInfo.ticketNumber || 'SEM NÚMERO'} — ${newCalledInfo.progressCurrent || 'Sem andamento informado.'}`)); } else { process.history.unshift(this.makeHistory('CHAMADO', 'Lembrete de atualização do chamado exibido, sem alteração.')); } } else { process.history.unshift(this.makeHistory('CHAMADO', 'Lembrete diário de chamado exibido e adiado pelo usuário.')); } process.updatedAt = this.nowIso(); this.saveSafe(); },
+
+  createProcess(){ const active=this.getActiveBlock(); if(!active){ alert('Crie ou carregue um bloco antes de cadastrar processos.'); return; } const pedido=(this.getEl('pPedido')?.value || '').trim(); if(!pedido){ alert('Pedido é obrigatório.'); return; } const dupPedido=this.getDuplicatePedido(pedido); if(dupPedido){ alert(`Pedido repetido detectado: ${pedido}. Já existe no bloco ${dupPedido.blockDate || '-'} (${dupPedido.processCode}).`); return; } const selectedInitial=this.getEl('pStatusInicial')?.value || 'NOVO'; const effective=selectedInitial==='NOVO' ? 'AGUARDANDO REQUISIÇÃO' : selectedInitial; const p={ id: Date.now()+Math.floor(Math.random()*1000), processCode:this.nextProcessCode(), dataEntrada:this.getEl('pDataEntrada')?.value || active.date || this.toDateInput(new Date()), createdAt:this.nowIso(), updatedAt:this.nowIso(), finishedAt:null, responsavel:(this.getEl('pResponsavel')?.value || '').trim() || 'NÃO INFORMADO', operacao:this.getEl('pOperacao')?.value || 'VENDA', carga:(this.getEl('pCarga')?.value || '').trim(), pedido, destinatario:(this.getEl('pDestinatario')?.value || '').trim(), uf:(this.getEl('pUf')?.value || '').trim().toUpperCase(), urgente:Boolean(this.getEl('pUrgente')?.checked), requisicao:'', nf:'', valorNf:0, dataEmissao:'', status:effective, previousStatus:selectedInitial, sharePointLane:'', modal:'---', obs:(this.getEl('pObs')?.value || '').trim(), history:[], stageTimeline:[], currentStatusStartedAt:this.nowIso(), origin:'MANUAL', conferenciaData:'', conferenciaAssinatura:'', expedicaoData:'', expedicaoAssinatura:'', delayReason:'', delayReasonRequestedAt:'', calledInfo:{ ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }, calledUpdatedAt:'', calledLastReminderAt:'', cancelReason:'' }; p.modal=this.calculateModal(p.uf,p.nf); p.sharePointLane=this.deriveLaneFromFields(p); p.history.unshift(this.makeHistory('CRIACAO', `Processo criado. Status inicial efetivo: ${effective}.`)); if(selectedInitial==='NOVO') p.history.unshift(this.makeHistory('REGRA','Ao incluir, status NOVO foi convertido para AGUARDANDO REQUISIÇÃO.')); p.stageTimeline.push({ id: Date.now()+1, status:p.status, start:p.currentStatusStartedAt, end:null, durationHours:0 }); active.entries.unshift(p); active.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} incluído no bloco.`)); this.clearProcessForm(); this.saveSafe(); this.renderAll();
+
+ },
+  clearProcessForm(){ ['pCarga','pPedido','pDestinatario','pUf','pObs'].forEach(id => { const el=this.getEl(id); if(el) el.value=''; }); if(this.getEl('pUrgente')) this.getEl('pUrgente').checked=false; if(this.getEl('pStatusInicial')) this.getEl('pStatusInicial').value='NOVO'; const active=this.getActiveBlock(); if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=active ? active.date : this.toDateInput(new Date()); if(this.getEl('pPedido')) this.getEl('pPedido').focus(); },
+
+  updateField(id, field, value){ const ref = this.getProcess(id); if(!ref) return; const { process:p, block } = ref; if(block.archived){ alert('O bloco está arquivado. Reabra em nova revisão se quiser editar.'); return; } const oldStatus = p.status; const oldReq = p.requisicao; const oldNf = p.nf; const oldDataEmissao = p.dataEmissao; const oldLane = p.sharePointLane; const oldValue = p[field]; if(field === 'pedido') value = String(value || '').trim(); if(field === 'uf') value = String(value || '').toUpperCase().trim(); if(field === 'valorNf') value = Number(value || 0); if(field === 'pedido'){ const dup = this.getDuplicatePedido(value, id); if(dup){ alert(`Pedido repetido detectado: ${value}. Já existe no bloco ${dup.blockDate || '-'} (${dup.processCode}).`); this.renderAll(); return; } } if(field === 'nf' && String(value || '').trim()){ const dup = this.getDuplicateNf(value, id); if(dup){ alert(`NF repetida detectada: ${value}. Já existe no pedido ${dup.pedido} (${dup.processCode}).`); this.renderAll(); return; } }
+  if(field === 'sharePointLane'){
+  const lane = this.normalizeLane(value);
+  p.sharePointLane = lane;
+  let targetStatus = '';
+
+  if(lane === 'EXPEDIDO'){
+    targetStatus = 'EXPEDIDO';
+  } else if(lane === 'LIBERADOS' && String(p.nf || '').trim() && String(p.dataEmissao || '').trim()){
+    targetStatus = 'LIBERADO';
+  } if(targetStatus && targetStatus !== oldStatus){ const validation = this.validateStatusTransition(p, targetStatus); if(!validation.ok){ alert(validation.message); this.renderAll(); return; } this.closeCurrentTimelineStage(p); p.previousStatus = oldStatus; p.status = targetStatus; this.openNewTimelineStage(p, targetStatus); p.history.unshift(this.makeHistory('STATUS', `Status sincronizado automaticamente para ${targetStatus} via coluna ${lane}.`)); } p.updatedAt = this.nowIso(); p.history.unshift(this.makeHistory('COLUNA', `Coluna SharePoint alterada de ${oldLane || 'SEM COLUNA'} para ${lane || 'SEM COLUNA'}.`)); block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} teve a coluna alterada.`)); this.saveSafe(); this.renderAll(); return; } if(field === 'status' && value !== oldStatus){ const validation = this.validateStatusTransition(p, value); if(!validation.ok){ alert(validation.message); this.renderAll(); return; } if(value === 'CHAMADO'){ const calledData = this.openCalledPrompt(p, 'new'); if(!calledData){ this.renderAll(); return; } p.calledInfo = calledData; p.calledUpdatedAt = this.nowIso(); p.calledLastReminderAt = this.todayKey(); p.history.unshift(this.makeHistory('CHAMADO', `Pedido entrou em CHAMADO. Nº ${calledData.ticketNumber || 'SEM NÚMERO'} — Motivo: ${calledData.reason}`)); } if(value === 'CANCELADO'){ const reason = window.prompt('Informe o motivo do cancelamento:', p.cancelReason || ''); if(reason === null || !String(reason).trim()){ alert('O motivo do cancelamento é obrigatório.'); this.renderAll(); return; } p.cancelReason = String(reason).trim(); p.history.unshift(this.makeHistory('CANCELAMENTO', `Pedido cancelado. Motivo: ${p.cancelReason}`)); } this.closeCurrentTimelineStage(p); p.previousStatus = oldStatus; p.status = value; this.openNewTimelineStage(p, value); p.history.unshift(this.makeHistory('STATUS', `Status alterado de ${oldStatus} para ${value}.`)); if(['CONCLUÍDO','CHAMADO','CANCELADO'].includes(value)){
+  p.finishedAt = this.nowIso();
+  p.sharePointLane = 'FINALIZADAS';
+} else {
+  p.finishedAt = null;
+  if(value === 'EXPEDIDO') p.sharePointLane = 'EXPEDIDO';
+  if(value === 'LIBERADO') p.sharePointLane = 'LIBERADOS';
+} p.updatedAt = this.nowIso(); p.modal = this.calculateModal(p.uf, p.nf); p.sharePointLane = this.deriveLaneFromFields(p) || p.sharePointLane || ''; block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} alterado.`));  this.saveSafe(); this.renderAll(); return; } p[field]=value; p.updatedAt=this.nowIso(); if(field==='requisicao' && !oldReq && String(value||'').trim()){ p.history.unshift(this.makeHistory('DOCUMENTO', `Requisição vinculada: ${value}`)); if(['NOVO','AGUARDANDO REQUISIÇÃO'].includes(p.status)){ const validation=this.validateStatusTransition(p,'EM SEPARAÇÃO'); if(validation.ok){ this.closeCurrentTimelineStage(p); p.previousStatus=p.status; p.status='EM SEPARAÇÃO'; this.openNewTimelineStage(p,p.status); p.history.unshift(this.makeHistory('REGRA','Status atualizado automaticamente para EM SEPARAÇÃO ao preencher a requisição.')); } } } if(field==='nf' && !oldNf && String(value||'').trim()){ p.history.unshift(this.makeHistory('DOCUMENTO', `NF informada: ${value}`)); if(!['CONCLUÍDO','CANCELADO','CHAMADO'].includes(p.status)){ const validation=this.validateStatusTransition(p,'NF INFORMADA'); if(validation.ok){ this.closeCurrentTimelineStage(p); p.previousStatus=p.status; p.status='NF INFORMADA'; this.openNewTimelineStage(p,p.status); p.history.unshift(this.makeHistory('REGRA','Status atualizado automaticamente para NF INFORMADA ao preencher NF.')); } } } if(field==='valorNf'){ const oldVal=Number(oldValue||0), newVal=Number(value||0); if(oldVal<=0 && newVal>0 && String(p.nf||'').trim()){ p.sharePointLane='LIBERADOS'; p.history.unshift(this.makeHistory('COLUNA','Coluna SharePoint atualizada automaticamente para LIBERADOS ao informar valor da NF.')); } if(newVal<=0 && !['EXPEDIDO','CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)) p.sharePointLane=''; } if(field==='dataEmissao' && !oldDataEmissao && String(value||'').trim()){ p.history.unshift(this.makeHistory('DOCUMENTO', `Data de emissão informada: ${value}`)); if(String(p.nf||'').trim()){ const validation=this.validateStatusTransition(p,'LIBERADO'); if(validation.ok){ this.closeCurrentTimelineStage(p); p.previousStatus=p.status; p.status='LIBERADO'; p.sharePointLane='LIBERADOS'; this.openNewTimelineStage(p,p.status); p.history.unshift(this.makeHistory('REGRA','Ao preencher a data de emissão, o status foi atualizado para LIBERADO.')); } } } p.modal=this.calculateModal(p.uf,p.nf); p.sharePointLane=this.deriveLaneFromFields(p) || p.sharePointLane || ''; block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} alterado.`)); this.saveSafe(); this.renderAll(); },
+  deleteProcess(id){ const ref=this.getProcess(id); if(!ref) return; const { process:p, block }=ref; if(block.archived){ alert('O bloco está arquivado e não pode ser alterado.'); return; } if(!confirm(`Excluir o processo ${p.processCode}?`)) return; block.entries=block.entries.filter(x => Number(x.id)!==Number(id)); block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} excluído do bloco.`)); this.saveSafe(); this.renderAll(); },
+  getStatusBadge(status){ if(['NOVO','AGUARDANDO REQUISIÇÃO'].includes(status)) return `<span class="badge b-info">${this.escapeHtml(status)}</span>`; if(['EM SEPARAÇÃO','NF INFORMADA','LIBERADO'].includes(status)) return `<span class="badge b-violet">${this.escapeHtml(status)}</span>`; if(status==='EXPEDIDO') return `<span class="badge b-warning">${this.escapeHtml(status)}</span>`; if(status==='CONCLUÍDO') return `<span class="badge b-success">${this.escapeHtml(status)}</span>`; if(['CHAMADO','CANCELADO'].includes(status)) return `<span class="badge b-danger">${this.escapeHtml(status)}</span>`; if(!status || status==='SEM COLUNA') return `<span class="badge b-muted">SEM COLUNA</span>`; return `<span class="badge b-muted">${this.escapeHtml(status)}</span>`; },
+
+  renderPage1KPIs(){ const active=this.getActiveBlock(); const arr=active ? active.entries : []; if(this.getEl('kpiTotalCriados')) this.getEl('kpiTotalCriados').textContent=arr.length; if(this.getEl('kpiAguardandoReq')) this.getEl('kpiAguardandoReq').textContent=arr.filter(p => !String(p.requisicao||'').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)).length; if(this.getEl('kpiEmSeparacao')) this.getEl('kpiEmSeparacao').textContent=arr.filter(p => p.status==='EM SEPARAÇÃO').length; if(this.getEl('kpiNotasFaturadas')) this.getEl('kpiNotasFaturadas').textContent=arr.filter(p => String(p.nf||'').trim()).length; if(this.getEl('kpiLiberadosExpedicao')) this.getEl('kpiLiberadosExpedicao').textContent=arr.filter(p => p.status==='LIBERADO').length; if(this.getEl('kpiChamadosP1')) this.getEl('kpiChamadosP1').textContent=arr.filter(p => p.status==='CHAMADO').length; if(this.getEl('kpiCanceladosP1')) this.getEl('kpiCanceladosP1').textContent=arr.filter(p => p.status==='CANCELADO').length; },
+  openKpiModal(type){ const active=this.getActiveBlock(); if(!active){ this.showSimpleModal('Sem bloco ativo','<div class="muted">Crie ou carregue um bloco para consultar os indicadores.</div>'); return; } let title='Lista', list=[]; if(type==='totalCriados'){ title='Total de Pedidos Criados'; list=active.entries.map(p => ({...p, blockDate: active.date})); } if(type==='aguardandoReq'){ title='Aguardando Requisição'; list=active.entries.filter(p => !String(p.requisicao||'').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)).map(p => ({...p, blockDate: active.date})); } if(type==='emSeparacao'){ title='Em Separação'; list=active.entries.filter(p => p.status==='EM SEPARAÇÃO').map(p => ({...p, blockDate: active.date})); } if(type==='notasFaturadas'){ title='Notas Faturadas'; list=active.entries.filter(p => String(p.nf||'').trim()).map(p => ({...p, blockDate: active.date})); } if(type==='liberadosExpedicao'){ title='Liberados à Expedição'; list=active.entries.filter(p => p.status==='LIBERADO').map(p => ({...p, blockDate: active.date})); } if(type==='chamados'){ title='Chamados'; list=active.entries.filter(p => p.status==='CHAMADO').map(p => ({...p, blockDate: active.date})); } if(type==='cancelados'){ title='Cancelados'; list=active.entries.filter(p => p.status==='CANCELADO').map(p => ({...p, blockDate: active.date})); } this.showProcessListModal(title, list); },
+  renderKanban(){
+  const board = this.getEl('kanbanBoard');
+  if(!board) return;
+
+  const active = this.getActiveBlock();
+  const entries = active ? active.entries : [];
+
+  board.innerHTML = this.sharePointLanes.map(lane => {
+    const count = entries.filter(p => p.sharePointLane === lane).length;
+
+    return `
+      <div class="lane" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+        <h4>${this.escapeHtml(lane)}</h4>
+        <div style="font-size:42px;font-weight:900;margin-top:10px;">
+          ${count}
+        </div>
+      </div>
+    `;
+  }).join('');
+},
+  renderActiveBlockSummary(){ const wrap=this.getEl('activeBlockSummary'); if(!wrap) return; const block=this.getActiveBlock(); if(!block){ wrap.innerHTML='<div class="detail-box"><h5>Sem bloco ativo</h5><pre>Crie ou carregue um bloco para começar.</pre></div>'; return; } const urg=block.entries.filter(p => p.urgente).length; const late=block.entries.filter(p => this.isBillingLate(p)).length; wrap.innerHTML=`<div class="detail-box"><h5>Bloco Atual</h5><pre>Data: ${this.fmtDate(block.date)}\nCriado em: ${this.fmtDateTime(block.createdAt)}\nObservação: ${this.escapeHtml(block.note || 'Sem observação')}</pre></div><div class="detail-box"><h5>Resumo Operacional</h5><pre>Processos: ${block.entries.length}\nUrgentes: ${urg}\nAtrasados p/ faturar: ${late}\nFechado: ${block.archived ? 'SIM' : 'NÃO'}</pre></div><div class="detail-box"><h5>Último histórico do bloco</h5><pre>${block.history.slice(0,4).map(h => `${this.fmtDateTime(h.date)} - ${h.text}`).join('\n') || 'Sem histórico.'}</pre></div>`; },
+  renderPage1Table(){ const body=this.getEl('page1TableBody'); if(!body) return; const active=this.getActiveBlock(); const term=this.normalizeText(this.getEl('page1Search')?.value || ''); const filterStatus=this.getEl('page1StatusFilter')?.value || ''; if(!active){ body.innerHTML='<tr><td colspan="13" class="muted">Nenhum bloco ativo.</td></tr>'; return; } const laneOptions=current => [''].concat(this.sharePointLanes).map(s => `<option value="${this.escapeHtml(s)}" ${current===s?'selected':''}>${this.escapeHtml(s || 'SEM COLUNA')}</option>`).join(''); const rows=active.entries.filter(p => { const bag=this.normalizeText([p.processCode,p.pedido,p.destinatario,p.nf,p.requisicao,p.status,p.obs,p.carga,p.modal,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || ''].join(' ')); return (!term || bag.includes(term)) && (!filterStatus || p.status===filterStatus); }).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).map(p => { const delayTag=this.isBillingLate(p) ? '<span class="badge b-warning">FATURAR > 1 DIA</span>' : ''; const delayReason=p.delayReason ? `<br><span class="badge b-danger">Motivo: ${this.escapeHtml(p.delayReason)}</span>` : ''; const cancelReason=p.cancelReason ? `<br><span class="badge b-danger">Cancel.: ${this.escapeHtml(p.cancelReason)}</span>` : ''; const calledTag=p.status==='CHAMADO' && p.calledInfo?.ticketNumber ? `<br><span class="badge b-danger">Chamado: ${this.escapeHtml(p.calledInfo.ticketNumber)}</span>` : ''; return `<tr class="${p.urgente?'row-urgent':''} ${this.isBillingLate(p)?'row-late':''}"><td><b>${this.escapeHtml(active.date)}</b><br>${this.escapeHtml(p.processCode)}</td><td><input class="input-inline" value="${this.escapeHtml(p.carga || '')}" onchange="App.updateField(${p.id}, 'carga', this.value)"></td><td><b>${this.escapeHtml(p.pedido)}</b><br><small>${this.escapeHtml(p.destinatario || '-')}</small>${this.renderStatusFlow(p, true)}</td><td><input class="input-inline" value="${this.escapeHtml(p.uf || '')}" onchange="App.updateField(${p.id}, 'uf', this.value)"></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" placeholder="REQ" value="${this.escapeHtml(p.requisicao || '')}" onchange="App.updateField(${p.id}, 'requisicao', this.value)"><input class="input-inline" placeholder="NF" value="${this.escapeHtml(p.nf || '')}" onchange="App.updateField(${p.id}, 'nf', this.value)"></div></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" type="number" min="0" step="0.01" value="${Number(p.valorNf || 0)}" onchange="App.updateField(${p.id}, 'valorNf', this.value)"><input class="input-inline" type="date" value="${this.escapeHtml(p.dataEmissao || '')}" onchange="App.updateField(${p.id}, 'dataEmissao', this.value)"></div></td><td><b>${this.escapeHtml(p.modal || '---')}</b></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'status', this.value)">${this.statuses.map(s => `<option value="${this.escapeHtml(s)}" ${p.status===s?'selected':''}>${this.escapeHtml(s)}</option>`).join('')}</select>${this.getStatusBadge(p.status)}${delayTag}</div></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'sharePointLane', this.value)">${laneOptions(p.sharePointLane || '')}</select>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</div></td><td>${p.urgente ? '<span class="badge b-danger">SIM</span>' : '<span class="badge b-muted">NÃO</span>'}</td><td><input class="input-inline" value="${this.escapeHtml(p.obs || '')}" onchange="App.updateField(${p.id}, 'obs', this.value)">${delayReason}${cancelReason}${calledTag}</td><td class="history-cell">${(p.history || []).slice(0,3).map(h => `${this.fmtDateTime(h.date)} - ${this.escapeHtml(h.text)}`).join('<br>')}</td><td class="no-print"><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-small" onclick="App.showDetails(${p.id})">👁️</button><button class="btn btn-small btn-danger" onclick="App.deleteProcess(${p.id})">🗑️</button></div></td></tr>`; }).join(''); body.innerHTML=rows || '<tr><td colspan="13" class="muted">Nenhum processo encontrado.</td></tr>'; },
+  checkDelayedBilling(){ if(this.delayedBillingPromptOpen || typeof window==='undefined') return; const target=this.getAllProcesses().find(p => this.isBillingLate(p) && !String(p.delayReason || '').trim() && !p.archived); if(!target) return; this.delayedBillingPromptOpen=true; setTimeout(() => { const ref=this.getProcess(target.id); if(!ref || ref.block.archived){ this.delayedBillingPromptOpen=false; return; } const reason=window.prompt(`O pedido ${ref.process.pedido} está há mais de 1 dia para faturar. Informe o motivo da demora:`, ref.process.delayReason || ''); ref.process.delayReasonRequestedAt=this.nowIso(); ref.process.updatedAt=this.nowIso(); if(reason && reason.trim()){ ref.process.delayReason=reason.trim(); ref.process.history.unshift(this.makeHistory('ATRASO FATURAMENTO', `Motivo informado para a demora no faturamento: ${reason.trim()}`)); } else { ref.process.delayReason=''; ref.process.history.unshift(this.makeHistory('ATRASO FATURAMENTO', 'Pedido com mais de 1 dia para faturar. Motivo ainda não informado.')); } this.delayedBillingPromptOpen=false; this.renderAll(); }, 120); },
+
+  renderPage3KPIs(){ const arr = this.getAllProcesses(); const releaseDurations = arr.map(p => { const rel=this.getReleaseTimestamp(p); return rel ? this.hoursBetween(p.createdAt,rel) : null; }).filter(v => v !== null); const conclusionDurations = arr.map(p => p.finishedAt && p.status==='CONCLUÍDO' ? this.hoursBetween(p.createdAt,p.finishedAt) : null).filter(v => v !== null); const createToSep = arr.map(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO')).filter(v => v !== null); const sepToFat = arr.map(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA')).filter(v => v !== null); const fatToExp = arr.map(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO')).filter(v => v !== null); const avgCreateToRelease = this.avg(releaseDurations); const avgUntilConclusion = this.avg(conclusionDurations); const avgCreateToSep = this.avg(createToSep); const avgSepToFat = this.avg(sepToFat); const avgFatToExp = this.avg(fatToExp); if(this.getEl('kpiTempoCriadoLiberado')) this.getEl('kpiTempoCriadoLiberado').textContent=this.formatHours(avgCreateToRelease); if(this.getEl('kpiTempoAteConcluir')) this.getEl('kpiTempoAteConcluir').textContent=this.formatHours(avgUntilConclusion); if(this.getEl('kpiTempoCriadoSeparacao')) this.getEl('kpiTempoCriadoSeparacao').textContent=this.formatHours(avgCreateToSep); if(this.getEl('kpiTempoSeparacaoFaturamento')) this.getEl('kpiTempoSeparacaoFaturamento').textContent=this.formatHours(avgSepToFat); if(this.getEl('kpiTempoFaturamentoExpedicao')) this.getEl('kpiTempoFaturamentoExpedicao').textContent=this.formatHours(avgFatToExp); if(this.getEl('kpiMgmtTotal')) this.getEl('kpiMgmtTotal').textContent=arr.length; if(this.getEl('kpiDoneMgmt')) this.getEl('kpiDoneMgmt').textContent=arr.filter(p => p.status==='CONCLUÍDO').length; if(this.getEl('kpiMgmtFaturadas')) this.getEl('kpiMgmtFaturadas').textContent=arr.filter(p => String(p.nf || '').trim()).length; if(this.getEl('kpiMgmtExp')) this.getEl('kpiMgmtExp').textContent=arr.filter(p => p.status==='EXPEDIDO').length; if(this.getEl('kpiMgmtChamados')) this.getEl('kpiMgmtChamados').textContent=arr.filter(p => p.status==='CHAMADO').length; if(this.getEl('kpiMgmtCancelados')) this.getEl('kpiMgmtCancelados').textContent=arr.filter(p => p.status==='CANCELADO').length; if(this.getEl('kpiUrgentes')) this.getEl('kpiUrgentes').textContent=arr.filter(p => p.urgente).length; },
+  openTimeKpiModal(type){ const arr = this.getAllProcesses(); let title = 'Lista'; let list = arr; if(type === 'createToRelease'){ title = 'Pedidos com liberação para expedição'; list = arr.filter(p => this.getReleaseTimestamp(p)); } if(type === 'untilConclusion'){ title = 'Pedidos concluídos'; list = arr.filter(p => p.status === 'CONCLUÍDO'); } if(type === 'createToSep'){ title = 'Pedidos com tempo entre criação e separação'; list = arr.filter(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO') !== null); } if(type === 'sepToFat'){ title = 'Pedidos com tempo entre separação e faturamento'; list = arr.filter(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA') !== null); } if(type === 'fatToExp'){ title = 'Pedidos com tempo entre faturamento e expedição'; list = arr.filter(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO') !== null); } if(type === 'done'){ title = 'Concluídos'; list = arr.filter(p => p.status === 'CONCLUÍDO'); } if(type === 'faturadas'){ title = 'Faturadas'; list = arr.filter(p => String(p.nf || '').trim()); } if(type === 'emExp'){ title = 'Em Expedição'; list = arr.filter(p => p.status === 'EXPEDIDO'); } if(type === 'chamados'){ title = 'Chamados'; list = arr.filter(p => p.status === 'CHAMADO'); } if(type === 'cancelados'){ title = 'Cancelados'; list = arr.filter(p => p.status === 'CANCELADO'); } if(type === 'urgent'){ title = 'Urgentes'; list = arr.filter(p => p.urgente); } if(type === 'totalProc'){ title = 'Total de Processos'; list = arr; } this.showProcessListModal(title, list); },
+  renderPage3(){
+  const body = this.getEl('page3TableBody');
+  if(!body) return;
+
+  const elSearch = this.getEl('p3Search');
+  const elDate = this.getEl('p3Date');
+
+  const term = this.normalizeText(elSearch?.value || '');
+  const fDate = elDate?.value || '';
+  const fStatus = this.getEl('p3Status')?.value || '';
+  const fUrg = this.getEl('p3Urgent')?.value || '';
+  const fLane = this.getEl('p3Lane')?.value || '';
+
+  if(!term && !fDate && !fStatus && !fUrg && !fLane){
+    body.innerHTML = `
+      <tr>
+        <td colspan="9" class="muted">
+          Use busca ou filtro para exibir pedidos.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const rows = this.getAllProcesses()
+    .filter(p => {
+      const bag = this.normalizeText([
+        p.processCode,
+        p.pedido,
+        p.destinatario,
+        p.nf,
+        p.requisicao,
+        p.status,
+        p.obs,
+        p.blockDate,
+        p.delayReason,
+        p.cancelReason,
+        p.calledInfo?.ticketNumber || '',
+        p.calledInfo?.reason || ''
+      ].join(' '));
+
+      const dateOk = !fDate || p.blockDate === fDate;
+      const urgOk = !fUrg || (fUrg === 'SIM' && p.urgente) || (fUrg === 'NAO' && !p.urgente);
+      const laneOk = !fLane || p.sharePointLane === fLane;
+
+      return (!term || bag.includes(term))
+        && (!fStatus || p.status === fStatus)
+        && dateOk
+        && urgOk
+        && laneOk;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map(p => `
+      <tr>
+        <td><b>${this.escapeHtml(p.blockDate || '-')}</b><br>${this.escapeHtml(p.processCode || '-')}</td>
+        <td><b>${this.escapeHtml(p.pedido || '-')}</b><br>${this.escapeHtml(p.destinatario || '-')}</td>
+        <td>REQ: ${this.escapeHtml(p.requisicao || '-')}<br>NF: ${this.escapeHtml(p.nf || '-')}</td>
+        <td>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</td>
+        <td>${this.escapeHtml(p.status || '-')}</td>
+        <td>${p.urgente ? 'SIM' : 'NÃO'}</td>
+        <td class="no-print">
+          <button class="btn btn-small" onclick="App.showDetails(${p.id})">Abrir</button>
+        </td>
+      </tr>
+    `)
+    .join('');
+
+  body.innerHTML = rows || `
+    <tr>
+      <td colspan="7" class="muted">
+        Nenhum resultado encontrado.
+      </td>
+    </tr>
+  `;
+},
+
+
+
+  renderArchivedBlocks(){ const wrap=this.getEl('archivedBlocksContainer'); if(!wrap) return; const term=this.normalizeText(this.getEl('archiveSearch')?.value || ''); const blocks=this.getArchivedBlocks().filter(block => { const bag=this.normalizeText([block.date, block.note, ...block.entries.map(e => [e.pedido,e.destinatario,e.nf,e.requisicao,e.obs,e.delayReason,e.cancelReason,e.calledInfo?.ticketNumber || '',e.calledInfo?.reason || '',e.calledInfo?.progressCurrent || ''].join(' '))].join(' ')); return !term || bag.includes(term); }); if(!blocks.length){ wrap.innerHTML='<div class="muted">Nenhum bloco arquivado encontrado.</div>'; return; } wrap.innerHTML=blocks.map(block => { const total=block.entries.length; const concl=block.entries.filter(e => e.status==='CONCLUÍDO').length; const exp=block.entries.filter(e => e.status==='EXPEDIDO').length; const urg=block.entries.filter(e => e.urgente).length; return `<details class="archive-card"><summary><div><div class="archive-summary-title">📁 Bloco ${this.fmtDate(block.date)}</div><div class="archive-summary-meta">${total} processo(s) • ${concl} concluído(s) • ${exp} em expedição • ${urg} urgente(s)</div></div><div class="toolbar no-print"><button class="btn btn-small" onclick="event.preventDefault(); App.printArchivedBlock(${block.id})">🖨️ Imprimir</button></div></summary><div class="archive-body"><div class="details-grid" style="margin:14px 0;"><div class="detail-box"><h5>Resumo do bloco</h5><pre>Data: ${this.fmtDate(block.date)}\nCriado em: ${this.fmtDateTime(block.createdAt)}\nFechado em: ${this.fmtDateTime(block.closedAt)}\nObservação: ${this.escapeHtml(block.note || 'Sem observação')}</pre></div><div class="detail-box"><h5>Histórico do bloco</h5><pre>${block.history.map(h => `${this.fmtDateTime(h.date)} - ${h.text}`).join('\n') || 'Sem histórico.'}</pre></div></div><div class="table-wrap"><table><thead><tr><th>Processo</th><th>Carga</th><th>Pedido / Cliente</th><th>Status</th><th>Coluna</th><th>Atual</th><th>Total</th><th>Urgente</th><th>Histórico</th></tr></thead><tbody>${block.entries.map(p => `<tr><td>${this.escapeHtml(p.processCode)}</td><td>${this.escapeHtml(p.carga || '-')}</td><td><b>${this.escapeHtml(p.pedido)}</b><br>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.getStatusBadge(p.status)}</td><td>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</td><td>${this.formatHours(this.getCurrentHours(p))}</td><td>${this.formatHours(this.getTotalHours(p))}</td><td>${p.urgente ? '<span class="badge b-danger">SIM</span>' : '<span class="badge b-muted">NÃO</span>'}</td><td class="history-cell">${(p.history || []).map(h => `${this.fmtDateTime(h.date)} - ${this.escapeHtml(h.text)}`).join('<br>')}</td></tr>`).join('')}</tbody></table></div></div></details>`; }).join(''); },
+
+  showSimpleModal(title, content){ const modal=this.getEl('detailsModal'); if(!modal) return; this.getEl('detailsTitle').textContent=title; this.getEl('detailsContent').innerHTML=content; modal.classList.add('show'); },
+  showProcessListModal(title,list){ const content=list.length ? `<div class="table-wrap"><table><thead><tr><th>Bloco</th><th>Processo</th><th>Pedido / Cliente</th><th>Status</th><th>Tempo Atual</th><th>Tempo Total</th></tr></thead><tbody>${list.map(p => `<tr><td>${this.escapeHtml(p.blockDate || '-')}</td><td>${this.escapeHtml(p.processCode)}</td><td><b>${this.escapeHtml(p.pedido)}</b><br>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.getStatusBadge(p.status)}</td><td>${this.formatHours(this.getCurrentHours(p))}</td><td>${this.formatHours(this.getTotalHours(p))}</td></tr>`).join('')}</tbody></table></div>` : '<div class="muted">Nenhum registro encontrado.</div>'; this.showSimpleModal(title,content); },
+  showDetails(processId){ const ref = this.getProcess(processId); if(!ref) return; const { process:p, block } = ref; const historyHtml = (p.history || []).map(h => `<li><b>${this.fmtDateTime(h.date)}</b> — ${this.escapeHtml(h.text)}</li>`).join('') || '<li>Nenhum histórico.</li>'; const timelineHtml = (p.stageTimeline || []).map(t => `<tr><td>${this.escapeHtml(t.status)}</td><td>${this.fmtDateTime(t.start)}</td><td>${this.fmtDateTime(t.end)}</td><td>${Number(t.durationHours || (t.end ? this.hoursBetween(t.start,t.end) : this.hoursBetween(t.start,null))).toFixed(1)}h</td></tr>`).join('') || '<tr><td colspan="4">Sem cronômetro.</td></tr>'; const chamadoBox = p.status === 'CHAMADO' || (p.calledInfo && (p.calledInfo.ticketNumber || p.calledInfo.reason || p.calledInfo.progressCurrent)) ? `<div class="detail-box"><h5>Dados do Chamado</h5><pre>Número: ${this.escapeHtml(p.calledInfo?.ticketNumber || '-')}\nMotivo: ${this.escapeHtml(p.calledInfo?.reason || '-')}\nAndamento atual: ${this.escapeHtml(p.calledInfo?.progressCurrent || '-')}\nÚltima atualização: ${this.fmtDateTime(p.calledUpdatedAt || '-')}</pre></div>` : ''; const cancelBox = p.cancelReason ? `<div class="detail-box"><h5>Motivo do Cancelamento</h5><pre>${this.escapeHtml(p.cancelReason)}</pre></div>` : ''; this.getEl('detailsTitle').textContent=`${p.processCode} • Pedido ${p.pedido}`; this.getEl('detailsContent').innerHTML=`<div class="card"><h3>Fluxo Visual do Pedido</h3>${this.renderStatusFlow(p)}</div><div class="details-grid"><div class="detail-box"><h5>Resumo</h5><pre>Bloco: ${this.escapeHtml(block.date)}\nStatus: ${this.escapeHtml(p.status)}\nColuna SharePoint: ${this.escapeHtml(p.sharePointLane || 'SEM COLUNA')}\nResponsável: ${this.escapeHtml(p.responsavel)}\nUrgente: ${p.urgente ? 'SIM' : 'NÃO'}</pre></div><div class="detail-box"><h5>Documentos</h5><pre>REQ: ${this.escapeHtml(p.requisicao || '-')}\nNF: ${this.escapeHtml(p.nf || '-')}\nData Emissão: ${this.escapeHtml(p.dataEmissao || '-')}\nValor NF: ${this.fmtMoney(p.valorNf || 0)}\nModal: ${this.escapeHtml(p.modal || '-')}</pre></div><div class="detail-box"><h5>Rastreabilidade</h5><pre>Criado: ${this.fmtDateTime(p.createdAt)}\nAtualizado: ${this.fmtDateTime(p.updatedAt)}\nData Entrada: ${this.escapeHtml(p.dataEntrada || '-')}\nOrigem: ${this.escapeHtml(p.origin || '-')}\nMotivo atraso: ${this.escapeHtml(p.delayReason || '-')}</pre></div>${chamadoBox}${cancelBox}</div><div class="card" style="margin-top:14px;"><h3>Cronômetro por Status</h3><div class="table-wrap"><table><thead><tr><th>Status</th><th>Início</th><th>Fim</th><th>Duração</th></tr></thead><tbody>${timelineHtml}</tbody></table></div></div><div class="card"><h3>Histórico Completo</h3><ul>${historyHtml}</ul></div>`; this.getEl('detailsModal').classList.add('show'); },
+  closeDetails(){ const modal=this.getEl('detailsModal'); if(modal) modal.classList.remove('show'); },
+
+  exportJSON(){ const blob=new Blob([JSON.stringify(this.db,null,2)], {type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mdr_ecosystem_consolidado_${this.toDateInput(new Date())}.json`; a.click(); URL.revokeObjectURL(a.href); },
+  importJSON(event){ const file=event.target.files?.[0]; if(!file) return; const reader=new FileReader(); reader.onload = ev => { try{ const data=JSON.parse(ev.target.result); if(!data || typeof data !== 'object') throw new Error('JSON inválido'); this.db.blocks=Array.isArray(data.blocks) ? data.blocks : []; this.db.analyses=Array.isArray(data.analyses) ? data.analyses : []; this.db.imports=Array.isArray(data.imports) ? data.imports : []; this.db.activeBlockId=data.activeBlockId || null; this.db.counters=data.counters || { processSeq: 0, analysisSeq: 0 }; this.migrateData(); this.ensureDefaults(); this.renderAll(); this.saveSafe(); alert('Base importada com sucesso.'); }catch(err){ console.error(err); alert('Falha ao importar JSON.'); } }; reader.readAsText(file); event.target.value=''; },
+  exportCSV(){ const headers=['blocoData','processCode','dataEntrada','responsavel','operacao','carga','pedido','destinatario','uf','urgente','requisicao','nf','valorNf','dataEmissao','status','sharePointLane','modal','obs','motivoAtraso','cancelReason','calledTicket','calledReason','calledProgress']; const rows=this.getAllProcesses().map(p => [p.blockDate,p.processCode,p.dataEntrada,p.responsavel,p.operacao,p.carga,p.pedido,p.destinatario,p.uf,p.urgente?'SIM':'NAO',p.requisicao,p.nf,p.valorNf,p.dataEmissao,p.status,p.sharePointLane,p.modal,p.obs,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || '']); const csv='\uFEFF' + headers.join(';') + '\n' + rows.map(r => r.map(v => this.toCSVSafe(v)).join(';')).join('\n'); const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mdr_ecosystem_consolidado_${this.toDateInput(new Date())}.csv`; a.click(); URL.revokeObjectURL(a.href); },
+  importCSV(event){ const file = event.target.files?.[0]; if(!file) return; const reader = new FileReader(); reader.onload = ev => { try{ const text = String(ev.target.result || '').replace(/\r/g,''); const lines = text.split('\n').filter(Boolean); if(lines.length < 2) throw new Error('CSV sem dados.'); const delimiter = (lines[0].match(/;/g) || []).length >= (lines[0].match(/,/g) || []).length ? ';' : ','; const headers = this.parseCsvLine(lines[0], delimiter).map(h => this.normalizeHeader(h)); const batchId = Date.now(); let ok = 0; let fail = 0; const errors = []; for(let i = 1; i < lines.length; i++){ const cells = this.parseCsvLine(lines[i], delimiter); if(!cells.join('').trim()) continue; const row = {}; headers.forEach((h,idx) => row[h] = cells[idx] ?? ''); const pedido = this.getImportedValue(row, this.csvFieldAliases.pedido); if(!pedido){ fail++; errors.push(`Linha ${i+1}: pedido ausente.`); continue; } const dataEntradaRaw = this.getImportedValue(row, this.csvFieldAliases.dataEntrada); const dateNormalized = this.parseDateFlex(dataEntradaRaw || this.toDateInput(new Date())); let block = this.getOpenBlockByDate(dateNormalized); if(!block){ if(this.db.blocks.find(b => b.date === dateNormalized && b.archived)){ fail++; errors.push(`Linha ${i+1}: já existe bloco FECHADO na data ${dateNormalized}.`); continue; } block = this.createBlock(dateNormalized, 'Criado por importação CSV'); } if(!block){ fail++; errors.push(`Linha ${i+1}: não foi possível criar ou localizar o bloco da data ${dateNormalized}.`); continue; } const existingLocal = block.entries.find(p => this.normalizeText(p.pedido)===this.normalizeText(pedido)); const existingPedidoGlobal = this.getDuplicatePedido(pedido, existingLocal ? existingLocal.id : null); const nfCandidate = this.getImportedValue(row, this.csvFieldAliases.nf); const existingNfGlobal = nfCandidate ? this.getDuplicateNf(nfCandidate, existingLocal ? existingLocal.id : null) : null; if(existingPedidoGlobal){ fail++; errors.push(`Linha ${i+1}: pedido repetido ${pedido} já existe em outro bloco.`); continue; } if(existingNfGlobal){ fail++; errors.push(`Linha ${i+1}: NF repetida ${nfCandidate} já existe no pedido ${existingNfGlobal.pedido}.`); continue; } const rawStatus = this.normalizeStatus(this.getImportedValue(row, this.csvFieldAliases.status)); const selectedStatus = this.statuses.includes(rawStatus) ? rawStatus : 'AGUARDANDO REQUISIÇÃO'; const effectiveStatus = selectedStatus === 'NOVO' ? 'AGUARDANDO REQUISIÇÃO' : selectedStatus; const incoming = { dataEntrada: dateNormalized, responsavel: this.getImportedValue(row, this.csvFieldAliases.responsavel) || 'IMPORTAÇÃO', operacao: this.getImportedValue(row, this.csvFieldAliases.operacao) || 'VENDA', carga: this.getImportedValue(row, this.csvFieldAliases.carga), pedido, destinatario: this.getImportedValue(row, this.csvFieldAliases.destinatario), uf: this.getImportedValue(row, this.csvFieldAliases.uf).toUpperCase(), urgente: this.normalizeText(this.getImportedValue(row, this.csvFieldAliases.urgente)) === 'SIM', requisicao: this.getImportedValue(row, this.csvFieldAliases.requisicao), nf: nfCandidate, valorNf: this.parseMoneyFlex(this.getImportedValue(row, this.csvFieldAliases.valor)), dataEmissao: this.parseDateFlex(this.getImportedValue(row, this.csvFieldAliases.dataEmissao)), status: effectiveStatus, sharePointLane: this.normalizeLane(this.getImportedValue(row, this.csvFieldAliases.sharePointLane)) || '', obs: this.getImportedValue(row, this.csvFieldAliases.observacao), delayReason: this.getImportedValue(row, this.csvFieldAliases.motivoAtraso) }; if(existingLocal){ Object.assign(existingLocal, incoming); existingLocal.updatedAt = this.nowIso(); existingLocal.modal = this.calculateModal(existingLocal.uf, existingLocal.nf); existingLocal.sharePointLane = this.deriveLaneFromFields(existingLocal) || existingLocal.sharePointLane || ''; existingLocal.history.unshift(this.makeHistory('IMPORTACAO', 'Processo atualizado por importação CSV (upsert).', {batchId})); const currentOpen = [...(existingLocal.stageTimeline || [])].reverse().find(t => !t.end); if(currentOpen && currentOpen.status !== existingLocal.status){ this.closeCurrentTimelineStage(existingLocal); this.openNewTimelineStage(existingLocal, existingLocal.status); } if(!existingLocal.stageTimeline || !existingLocal.stageTimeline.length){ existingLocal.currentStatusStartedAt = this.nowIso(); existingLocal.stageTimeline = [{ id: Date.now()+i+2000, status: existingLocal.status, start: existingLocal.currentStatusStartedAt, end: null, durationHours: 0 }]; } } else { const process = { id: Date.now()+i+Math.floor(Math.random()*1000), processCode: this.nextProcessCode(), createdAt: this.nowIso(), updatedAt: this.nowIso(), finishedAt: ['CONCLUÍDO','CHAMADO','CANCELADO'].includes(incoming.status) ? this.nowIso() : null, previousStatus: selectedStatus, modal: this.calculateModal(incoming.uf, incoming.nf), history: [], stageTimeline: [], currentStatusStartedAt: this.nowIso(), origin: 'RELATÓRIO', conferenciaData: '', conferenciaAssinatura: '', expedicaoData: '', expedicaoAssinatura: '', delayReasonRequestedAt: '', calledInfo:{ ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }, calledUpdatedAt:'', calledLastReminderAt:'', cancelReason:'', ...incoming }; process.history.unshift(this.makeHistory('IMPORTACAO', 'Processo criado por importação CSV.', {batchId})); if(selectedStatus === 'NOVO') process.history.unshift(this.makeHistory('REGRA', 'Status NOVO convertido para AGUARDANDO REQUISIÇÃO na importação.')); process.sharePointLane = this.deriveLaneFromFields(process) || process.sharePointLane || ''; process.stageTimeline.push({ id: Date.now()+i+1000, status: process.status, start: process.currentStatusStartedAt, end: null, durationHours: 0 }); block.entries.unshift(process); } block.history.unshift(this.makeHistory('IMPORTACAO', `Pedido ${pedido} processado por importação CSV.`)); ok++; } this.db.imports.unshift({ id: batchId, fileName: file.name, createdAt: this.nowIso(), ok, fail, errors }); if(!this.db.activeBlockId){ const first = this.getOpenBlocks()[0]; if(first) this.db.activeBlockId = first.id; } this.renderAll(); this.saveSafe(); const errorPreview = errors.slice(0, 8).join('\n'); alert(`Importação concluída.\n\nVálidos: ${ok}\nErros: ${fail}` + (errors.length ? `\n\nPrimeiros erros:\n${errorPreview}` : '')); }catch(err){ console.error(err); alert('Falha ao importar CSV.'); } }; reader.readAsText(file, 'utf-8'); event.target.value = ''; },
+  downloadCsvTemplate(){ const headers = ['pedido','destinatario','uf','requisicao','nf','valor','status','operacao','dataEntrada','responsavel','carga','urgente','observacao','dataEmissao','sharePointLane','motivoAtraso']; const sample = ['45001234','Hospital Exemplo','PE','REQ123','NF8899','1500,00','AGUARDANDO REQUISIÇÃO','VENDA',this.toDateInput(new Date()),'JOÃO VICTOR','CARGA-01','NAO','Exemplo de importação','','','']; const csv = '\uFEFF' + headers.join(';') + '\n' + sample.map(v => this.toCSVSafe(v)).join(';'); const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'modelo_importacao_mdr_ecosystem.csv'; a.click(); URL.revokeObjectURL(a.href); },
+
+  printCurrentBlock(){
+  const block = this.getActiveBlock();
+  if(!block){
+    alert('Nenhum bloco ativo.');
+    return;
+  }
+  this.openBlockPrintChooser(block, 'ATIVO');
+},
+
+printArchivedBlock(blockId){
+  const block = this.getBlock(blockId);
+  if(!block){
+    alert('Bloco não encontrado.');
+    return;
+  }
+  this.openBlockPrintChooser(block, 'ARQUIVADO');
+},
+
+openBlockPrintChooser(block, mode='ATIVO'){
+  const type = window.prompt(
+`Escolha o tipo de relatório do bloco:
+
+1 - Relatório Expedição de Bloco
+2 - Relatório Bloco Gestão`,
+    '1'
+  );
+
+  if(type === null) return;
+
+  const chosenType = String(type).trim();
+  if(!['1','2'].includes(chosenType)){
+    alert('Opção inválida.');
+    return;
+  }
+
+  const statusFilter = this.promptPrintStatusFilter(block);
+  if(statusFilter === null) return;
+
+  if(chosenType === '1'){
+    this.printBlockExpedition(block, statusFilter);
+    return;
+  }
+
+  if(chosenType === '2'){
+    this.printBlockManagement(block, statusFilter);
+    return;
+  }
+},
+
+promptPrintStatusFilter(block){
+  const presentStatuses = this.statuses.filter(
+    s => (block.entries || []).some(p => p.status === s)
+  );
+
+  const menu = ['0 - TODOS']
+    .concat(presentStatuses.map((s, i) => `${i + 1} - ${s}`))
+    .join('\n');
+
+  const answer = window.prompt(
+`Filtrar impressão por status?
+
+${menu}`,
+    '0'
+  );
+
+  if(answer === null) return null;
+
+  const idx = Number(answer);
+
+  if(Number.isNaN(idx) || idx < 0 || idx > presentStatuses.length){
+    alert('Filtro de status inválido. Será usado "TODOS".');
+    return '';
+  }
+
+  return idx === 0 ? '' : presentStatuses[idx - 1];
+},
+
+getBlockEntriesForPrint(block, statusFilter=''){
+  const entries = [...(block.entries || [])];
+  const filtered = statusFilter
+    ? entries.filter(p => p.status === statusFilter)
+    : entries;
+
+  return filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+},
+
+buildPrintTimeline(process){
+  const timeline = (process.stageTimeline || []).map(stage => {
+    const duration = stage.end
+      ? Number(stage.durationHours || this.hoursBetween(stage.start, stage.end))
+      : this.hoursBetween(stage.start, null);
+
+    return `${this.escapeHtml(stage.status)}: ${this.formatHours(duration)}`;
+  });
+
+  return timeline.length ? timeline.join('<br>') : '-';
+},
+
+printBlockExpedition(block, statusFilter=''){
+  const entries = this.getBlockEntriesForPrint(block, statusFilter);
+
+  const addDays = (dateStr, days) => {
+    const base = this.parseLocalDate(dateStr) || new Date(dateStr);
+    if(!base || isNaN(base.getTime())) return '-';
+    const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + days);
+    return d.toLocaleDateString('pt-BR');
+  };
+
+  const dataSeparar = addDays(block.date, 1);
+  const dataExpedir = addDays(block.date, 2);
+
+  const totalPedidos = entries.length;
+  const aguardandoReq = entries.filter(
+    p => !String(p.requisicao || '').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)
+  ).length;
+  const emSeparacao = entries.filter(p => p.status === 'EM SEPARAÇÃO').length;
+  const cancelados = entries.filter(p => p.status === 'CANCELADO').length;
+  const chamados = entries.filter(p => p.status === 'CHAMADO').length;
+  const urgentes = entries.filter(p => p.urgente).length;
+  const faturadas = entries.filter(p => String(p.nf || '').trim()).length;
+
+  const rows = entries.map(p => `
+    <tr>
+      <td>${this.escapeHtml(p.carga || '-')}</td>
+      <td>
+        <b>${this.escapeHtml(p.pedido)}</b><br>
+        ${this.escapeHtml(p.destinatario || '-')}<br>
+        <small>UF: ${this.escapeHtml(p.uf || '-')}</small>
+      </td>
+      <td>${this.escapeHtml(p.requisicao || '-')}</td>
+      <td>${this.escapeHtml(p.nf || '-')}</td>
+      <td>${this.escapeHtml(p.dataEmissao || '-')}</td>
+      <td>${this.fmtMoney(p.valorNf || 0)}</td>
+      <td>${this.escapeHtml(p.modal || '-')}</td>
+      <td>${this.escapeHtml(p.status || '-')}</td>
+      <td>${this.escapeHtml(p.obs || '-')}</td>
+      <td>
+        <div class="fill-box">
+          <div><b>Data:</b> ${this.escapeHtml(p.conferenciaData || '')}</div>
+          <div class="signature-line">Assinatura</div>
+        </div>
+      </td>
+      <td>
+        <div class="fill-box">
+          <div><b>Data:</b> ${this.escapeHtml(p.expedicaoData || '')}</div>
+          <div class="signature-line">Assinatura</div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  const w = window.open('', '_blank');
+
+  w.document.write(`
+    <html>
+    <head>
+      <title>Relatório Expedição do Bloco ${this.fmtDate(block.date)}</title>
+      <style>
+        body{font-family:Arial,sans-serif;padding:24px;color:#111827}
+        h1,h2,h3{margin:0 0 10px}
+        .muted{color:#64748b;margin-bottom:8px}
+        .header-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:12px;margin-bottom:20px}
+        .header-box{border:1px solid #cbd5e1;border-radius:8px;padding:12px;background:#f8fafc;min-height:120px}
+        .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+        .summary-box{border:1px solid #cbd5e1;padding:12px;border-radius:8px;background:#f8fafc}
+        .summary-box b{display:block;font-size:11px;color:#475569;margin-bottom:6px;text-transform:uppercase}
+        .summary-box span{font-size:18px;font-weight:bold}
+        .section-title{margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
+        table{width:100%;border-collapse:collapse;font-size:12px}
+        th,td{border:1px solid #cbd5e1;padding:8px;vertical-align:top}
+        th{background:#f1f5f9}
+        button{padding:10px 14px;border:none;background:#2563eb;color:#fff;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:14px}
+        .fill-box{min-width:150px;height:92px;display:flex;flex-direction:column;justify-content:flex-end;padding:4px 6px}
+        .signature-line{margin-top:28px;border-top:1px solid #111827;padding-top:5px;font-size:11px;text-align:center;color:#111827}
+      </style>
+    </head>
+    <body>
+      <button onclick="window.print()">🖨️ Imprimir</button>
+
+      <div class="header-grid">
+        <div class="header-box">
+          <h1>Relatório Expedição de Bloco</h1>
+          <div class="muted"><b>Bloco:</b> ${this.fmtDate(block.date)}</div>
+          <div class="muted"><b>Criado em:</b> ${this.fmtDateTime(block.createdAt)}</div>
+          <div class="muted"><b>Status do bloco:</b> ${block.archived ? 'FECHADO' : 'ABERTO'}</div>
+          <div class="muted"><b>Observação:</b> ${this.escapeHtml(block.note || 'Sem observação')}</div>
+          <div class="muted"><b>Filtro aplicado:</b> ${this.escapeHtml(statusFilter || 'TODOS')}</div>
+        </div>
+
+        <div class="header-box">
+          <h3>Separar / Conferir / Emitir</h3>
+          <div class="muted"><b>Data:</b> ${dataSeparar}</div>
+        </div>
+
+        <div class="header-box">
+          <h3>Expedir</h3>
+          <div class="muted"><b>Data:</b> ${dataExpedir}</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Resumo Executivo</h2>
+      <div class="summary">
+        <div class="summary-box"><b>Total de pedidos gerados</b><span>${totalPedidos}</span></div>
+        <div class="summary-box"><b>Aguardando requisições</b><span>${aguardandoReq}</span></div>
+        <div class="summary-box"><b>Em separação</b><span>${emSeparacao}</span></div>
+        <div class="summary-box"><b>Faturadas</b><span>${faturadas}</span></div>
+        <div class="summary-box"><b>Cancelados</b><span>${cancelados}</span></div>
+        <div class="summary-box"><b>Em chamado</b><span>${chamados}</span></div>
+        <div class="summary-box"><b>Urgentes</b><span>${urgentes}</span></div>
+      </div>
+
+      <h2 class="section-title">Detalhamento Operacional</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Carga</th>
+            <th>Pedido / Cliente</th>
+            <th>REQ</th>
+            <th>NF</th>
+            <th>Data Emissão</th>
+            <th>Valor NF</th>
+            <th>Modal</th>
+            <th>Status</th>
+            <th>Observação</th>
+            <th>Conferência</th>
+            <th>Expedição</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows || `<tr><td colspan="11">Nenhum pedido para o filtro informado.</td></tr>`}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+},
+
+printBlockManagement(block, statusFilter=''){
+  const entries = this.getBlockEntriesForPrint(block, statusFilter);
+
+  const totalPedidos = entries.length;
+  const cancelados = entries.filter(p => p.status === 'CANCELADO');
+  const chamados = entries.filter(p => p.status === 'CHAMADO');
+
+  const faturadasValidas = entries.filter(
+    p => Number(p.valorNf || 0) > 0 && String(p.nf || '').trim()
+  );
+
+  const maior = [...faturadasValidas].sort((a, b) => Number(b.valorNf || 0) - Number(a.valorNf || 0))[0] || null;
+  const menor = [...faturadasValidas].sort((a, b) => Number(a.valorNf || 0) - Number(b.valorNf || 0))[0] || null;
+
+  const somaTotal = entries.reduce((s, p) => s + Number(p.valorNf || 0), 0);
+  const somaCancelados = cancelados.reduce((s, p) => s + Number(p.valorNf || 0), 0);
+  const somaChamados = chamados.reduce((s, p) => s + Number(p.valorNf || 0), 0);
+  const valorTotalBloco = somaTotal - somaCancelados - somaChamados;
+
+  const rows = entries.map(p => `
+    <tr>
+      <td>${this.escapeHtml(p.carga || '-')}</td>
+      <td>
+        <b>${this.escapeHtml(p.pedido)}</b><br>
+        ${this.escapeHtml(p.destinatario || '-')}<br>
+        <small>UF: ${this.escapeHtml(p.uf || '-')}</small>
+      </td>
+      <td>${this.escapeHtml(p.requisicao || '-')}</td>
+      <td>${this.escapeHtml(p.nf || '-')}</td>
+      <td>${this.escapeHtml(p.dataEmissao || '-')}</td>
+      <td>${this.fmtMoney(p.valorNf || 0)}</td>
+      <td>${this.escapeHtml(p.modal || '-')}</td>
+      <td>${this.escapeHtml(p.status || '-')}</td>
+      <td><small>${this.buildPrintTimeline(p)}</small></td>
+      <td>${this.escapeHtml(p.obs || '-')}</td>
+    </tr>
+  `).join('');
+
+  const w = window.open('', '_blank');
+
+  w.document.write(`
+    <html>
+    <head>
+      <title>Relatório Gestão do Bloco ${this.fmtDate(block.date)}</title>
+      <style>
+        body{font-family:Arial,sans-serif;padding:24px;color:#111827}
+        h1,h2,h3{margin:0 0 10px}
+        .muted{color:#64748b;margin-bottom:8px}
+        .header{border-bottom:2px solid #cbd5e1;padding-bottom:14px;margin-bottom:18px}
+        .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+        .summary-box{border:1px solid #cbd5e1;padding:12px;border-radius:8px;background:#f8fafc}
+        .summary-box b{display:block;font-size:11px;color:#475569;margin-bottom:6px;text-transform:uppercase}
+        .summary-box span{font-size:18px;font-weight:bold}
+        .section-title{margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
+        table{width:100%;border-collapse:collapse;font-size:12px}
+        th,td{border:1px solid #cbd5e1;padding:8px;vertical-align:top}
+        th{background:#f1f5f9}
+        button{padding:10px 14px;border:none;background:#2563eb;color:#fff;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:14px}
+      </style>
+    </head>
+    <body>
+      <button onclick="window.print()">🖨️ Imprimir</button>
+
+      <div class="header">
+        <h1>Relatório Bloco Gestão</h1>
+        <div class="muted"><b>Bloco:</b> ${this.fmtDate(block.date)}</div>
+        <div class="muted"><b>Criado em:</b> ${this.fmtDateTime(block.createdAt)}</div>
+        <div class="muted"><b>Status do bloco:</b> ${block.archived ? 'FECHADO' : 'ABERTO'}</div>
+        <div class="muted"><b>Observação:</b> ${this.escapeHtml(block.note || 'Sem observação')}</div>
+        <div class="muted"><b>Filtro aplicado:</b> ${this.escapeHtml(statusFilter || 'TODOS')}</div>
+      </div>
+
+      <h2 class="section-title">Resumo Executivo</h2>
+      <div class="summary">
+        <div class="summary-box"><b>Total de pedidos</b><span>${totalPedidos}</span></div>
+        <div class="summary-box"><b>Maior valor / Nota</b><span>${maior ? `${this.fmtMoney(maior.valorNf)} • NF ${this.escapeHtml(maior.nf)}` : '-'}</span></div>
+        <div class="summary-box"><b>Menor valor / Nota</b><span>${menor ? `${this.fmtMoney(menor.valorNf)} • NF ${this.escapeHtml(menor.nf)}` : '-'}</span></div>
+        <div class="summary-box"><b>Cancelados</b><span>${cancelados.length}</span></div>
+        <div class="summary-box"><b>Em chamado</b><span>${chamados.length}</span></div>
+        <div class="summary-box"><b>Valor total do bloco</b><span>${this.fmtMoney(valorTotalBloco)}</span></div>
+      </div>
+
+      <h2 class="section-title">Detalhamento Operacional</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Carga</th>
+            <th>Pedido / Cliente</th>
+            <th>REQ</th>
+            <th>NF</th>
+            <th>Data Emissão</th>
+            <th>Valor NF</th>
+            <th>Modal</th>
+            <th>Status Atual</th>
+            <th>Histórico de Status / Tempo</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows || `<tr><td colspan="10">Nenhum pedido para o filtro informado.</td></tr>`}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+},
+  printManagerReport(){ const all = this.getAllProcesses(); const pendReq = all.filter(p => !String(p.requisicao || '').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)); const pendFat = all.filter(p => this.isBillingPending(p)); const concl = all.filter(p => p.status === 'CONCLUÍDO'); const urg = all.filter(p => p.urgente); const chamados = all.filter(p => p.status === 'CHAMADO'); const cancelados = all.filter(p => p.status === 'CANCELADO'); const avgCreateToSep = this.avg(all.map(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO')).filter(v => v !== null)); const avgSepToFat = this.avg(all.map(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA')).filter(v => v !== null)); const avgFatToExp = this.avg(all.map(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO')).filter(v => v !== null)); const criticalRows = pendFat.slice(0, 30).map(p => `<tr><td>${this.escapeHtml(p.blockDate || '-')}</td><td>${this.escapeHtml(p.processCode)}</td><td>${this.escapeHtml(p.pedido)}</td><td>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.escapeHtml(p.status)}</td><td>${this.escapeHtml(p.delayReason || '-')}</td></tr>`).join(''); const win = window.open('', '_blank'); win.document.write(`<html><head><title>Relatório Gerencial MDR Ecosystem</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111827}h1,h2{margin:0 0 12px}.muted{color:#64748b}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.box{border:1px solid #cbd5e1;border-radius:8px;padding:12px;background:#f8fafc}.box b{display:block;font-size:11px;color:#475569;text-transform:uppercase;margin-bottom:6px}.box span{font-size:18px;font-weight:bold}.section{margin-top:24px}table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid #cbd5e1;padding:8px;vertical-align:top}th{background:#f1f5f9}button{padding:10px 14px;border:none;background:#2563eb;color:#fff;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:14px}</style></head><body><button onclick="window.print()">🖨️ Imprimir</button><h1>Relatório Gerencial MDR Ecosystem</h1><div class="muted">Gerado em ${this.fmtDateTime(this.nowIso())}</div><div class="summary"><div class="box"><b>Total de Processos</b><span>${all.length}</span></div><div class="box"><b>Concluídos</b><span>${concl.length}</span></div><div class="box"><b>Pendentes de Requisição</b><span>${pendReq.length}</span></div><div class="box"><b>Pendentes de Faturamento</b><span>${pendFat.length}</span></div><div class="box"><b>Urgentes</b><span>${urg.length}</span></div><div class="box"><b>Chamados</b><span>${chamados.length}</span></div><div class="box"><b>Cancelados</b><span>${cancelados.length}</span></div><div class="box"><b>Tempo Médio Criado → Separação</b><span>${this.formatHours(avgCreateToSep)}</span></div><div class="box"><b>Tempo Médio Separação → Faturamento</b><span>${this.formatHours(avgSepToFat)}</span></div><div class="box"><b>Tempo Médio Faturamento → Expedição</b><span>${this.formatHours(avgFatToExp)}</span></div></div><div class="section"><h2>Pendências Críticas de Faturamento</h2><table><thead><tr><th>Bloco</th><th>Processo</th><th>Pedido</th><th>Cliente</th><th>Status</th><th>Motivo do Atraso</th></tr></thead><tbody>${criticalRows || `<tr><td colspan="6">Nenhuma pendência crítica.</td></tr>`}</tbody></table></div></body></html>`); win.document.close(); },
+  resetAll(){
+  if(!confirm('Deseja apagar toda a base local do MDR Ecosystem?')) return;
+
+  if(typeof localStorage !== 'undefined'){
+    localStorage.removeItem(this.storageKey);
+    localStorage.removeItem(this.backupKey);
+    localStorage.removeItem(this.syncStateKey);
+  }
+
+  this.db = {
+    blocks: [],
+    analyses: [],
+    imports: [],
+    activeBlockId: null,
+    counters: { processSeq: 0, analysisSeq: 0 }
+  };
+
+  this.dbDirty = false;
+  this.backupDirty = false;
+  this.lastDbSyncAt = '';
+  this.lastBackupAt = '';
+
+  this.ensureDefaults();
+  this.renderAll();
+}
+};
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { App };
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', async () => {
+    await App.init();
+  });
+}
+
+  </script>
+
+  <script>
+const API_HOST = window.location.hostname || '127.0.0.1';
+const API_BASE = `http://${API_HOST}:5001`;
+
+ 
+App.getServerPayload = function () {
+  return {
+    blocks: this.db.blocks || [],
+    analyses: this.db.analyses || [],
+    imports: this.db.imports || [],
+    activeBlockId: this.db.activeBlockId ?? null,
+    counters: this.db.counters ?? {
+      processSeq: 0,
+      analysisSeq: 0
+    }
+  };
+};
+
+
+App.saveServer = async function (showAlert = true) {
+  try {
+    const data = await this.syncDatabaseIfNeeded(true);
+
+    if (showAlert) {
+      alert('Banco sincronizado com sucesso.');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Erro ao salvar no servidor:', error);
+    if (showAlert) {
+      alert(`Erro ao salvar no servidor: ${error.message}`);
+    }
+    throw error;
+  }
+};
+
+App.loadServer = async function (showAlert = true) {
+  if(this.dbDirty){
+    console.warn('⚠️ Dados locais não salvos — load cancelado.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/load`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Falha ao carregar dados do servidor.');
+    }
+
+    const incoming = data.data || data || {};
+
+    if(JSON.stringify(this.db.blocks) === JSON.stringify(incoming.blocks || [])){
+      return data;
+    }
+
+    this.db = {
+      blocks: Array.isArray(incoming.blocks) ? incoming.blocks : [],
+      analyses: Array.isArray(incoming.analyses) ? incoming.analyses : [],
+      imports: Array.isArray(incoming.imports) ? incoming.imports : [],
+      activeBlockId: incoming.activeBlockId ?? null,
+      counters: incoming.counters ?? { processSeq: 0, analysisSeq: 0 }
+    };
+
+    this._lastHash = JSON.stringify(this.db.blocks);
+
+    if (typeof this.migrateData === 'function') this.migrateData();
+    if (typeof this.ensureDefaults === 'function') this.ensureDefaults();
+    if (typeof this.renderAll === 'function') this.renderAll();
+
+    this.dbDirty = false;
+    this.backupDirty = false;
+    this.saveSyncState();
+
+    if (showAlert) {
+      alert(`Base carregada do servidor com sucesso. Origem: ${data.source || 'SERVIDOR'}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Erro ao carregar do servidor:', error);
+    if (showAlert) {
+      alert(`Erro ao carregar do servidor: ${error.message}`);
+    }
+    throw error;
+  }
+};
+
+
+App.backupServer = async function (showAlert = true) {
+  try {
+    const data = await this.syncBackupIfNeeded(true);
+
+    if (showAlert) {
+      alert(`Backup gerado com sucesso.\nArquivo: ${data.backup_file}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Erro ao gerar backup:', error);
+    if (showAlert) {
+      alert(`Erro ao gerar backup: ${error.message}`);
+    }
+    throw error;
+  }
+};
+
+
+</script>
+</body>
+</html>
