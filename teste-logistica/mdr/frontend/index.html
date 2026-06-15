@@ -137,54 +137,57 @@
       </div>
 
       <div class="split">
-        <div>
-          <div class="card">
-            <h2>Cadastro / Entrada de Processo</h2>
-            <p class="subtext">Cria um processo dentro do bloco ativo do dia.</p>
-            <form id="processForm" onsubmit="event.preventDefault(); App.createProcess();">
-              <div class="form-grid">
-                <div class="field"><label>Data Entrada</label><input id="pDataEntrada" type="date"></div>
-                <div class="field"><label>Responsável</label><input id="pResponsavel" type="text" value="JOÃO VICTOR"></div>
-                <div class="field"><label>Operação</label><select id="pOperacao"><option>VENDA</option><option>DEVOLUÇÃO</option><option>COLETA</option><option>TRANSFERÊNCIA</option></select></div>
-                <div class="field"><label>Carga</label><input id="pCarga" type="text" placeholder="Lote / carga"></div>
-                <div class="field"><label>Pedido *</label><input id="pPedido" type="text" required placeholder="Ex: 45001234"></div>
-                <div class="field"><label>Destinatário / Hospital</label><input id="pDestinatario" type="text" placeholder="Nome do cliente / hospital"></div>
-                <div class="field"><label>UF</label><input id="pUf" type="text" maxlength="2" placeholder="PE" oninput="this.value=this.value.toUpperCase()"></div>
-                <div class="field"><label>Status Inicial</label><select id="pStatusInicial"></select></div>
-                <div class="field"><label>Urgente</label><div class="checkbox-wrap"><input id="pUrgente" type="checkbox"><span>Marcar como urgente</span></div></div>
-                <div class="field" style="grid-column:span 2;"><label>Observação Inicial</label><input id="pObs" type="text" placeholder="Comentário de abertura"></div>
-              </div>
-              <div class="toolbar" style="margin-top:14px;">
-                <button class="btn btn-primary" type="submit">💾 Salvar Processo</button>
-                <button class="btn" type="button" onclick="App.clearProcessForm()">🧹 Limpar Campos</button>
-              </div>
-            </form>
-          </div>
+  <div>
+    <div class="card">
+      <h2>Cadastro / Entrada de Processo</h2>
+      <p class="subtext">Cria um processo dentro do bloco ativo do dia.</p>
+      <form id="processForm" onsubmit="event.preventDefault(); App.createProcess();">
+        <div class="form-grid">
+          <div class="field"><label>Data Entrada</label><input id="pDataEntrada" type="date"></div>
+          <div class="field"><label>Responsável</label><input id="pResponsavel" type="text" value="JOÃO VICTOR"></div>
+          <div class="field"><label>Operação</label><select id="pOperacao"><option>VENDA</option><option>DEVOLUÇÃO</option><option>COLETA</option><option>TRANSFERÊNCIA</option></select></div>
+          <div class="field"><label>Carga</label><input id="pCarga" type="text" placeholder="Lote / carga"></div>
+          <div class="field"><label>Pedido *</label><input id="pPedido" type="text" required placeholder="Ex: 45001234"></div>
+          <div class="field"><label>Destinatário / Hospital</label><input id="pDestinatario" type="text" placeholder="Nome do cliente / hospital"></div>
+          <div class="field"><label>UF</label><input id="pUf" type="text" maxlength="2" placeholder="PE" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="field"><label>Status Inicial</label><select id="pStatusInicial"></select></div>
+          <div class="field"><label>Urgente</label><div class="checkbox-wrap"><input id="pUrgente" type="checkbox"><span>Marcar como urgente</span></div></div>
+          <div class="field" style="grid-column:span 2;"><label>Observação Inicial</label><input id="pObs" type="text" placeholder="Comentário de abertura"></div>
+        </div>
+        <div class="toolbar" style="margin-top:14px;">
+          <button class="btn btn-primary" type="submit">💾 Salvar Processo</button>
+          <button class="btn" type="button" onclick="App.clearProcessForm()">🧹 Limpar Campos</button>
+        </div>
+      </form>
+    </div>
 
-          <div class="card">
-            <h2>Importação por Relatório (CSV)</h2>
-            <p class="subtext">Recebe o arquivo dos pedidos e monta/atualiza os blocos conforme a data do pedido.</p>
-            <div class="toolbar">
-              <label class="btn btn-success" for="csvImportFile">📥 Importar CSV</label>
-              <input id="csvImportFile" class="hidden" type="file" accept=".csv,text/csv" onchange="App.importCSV(event)">
-              <button class="btn" onclick="App.downloadCsvTemplate()">📄 Baixar Modelo CSV</button>
-            </div>
-            <div class="details-grid" style="margin-top:14px;">
-              <div class="detail-box"><h5>Modelo esperado</h5><pre>pedido;destinatario;uf;requisicao;nf;valor;status;operacao;dataEntrada;responsavel;carga;urgente;observacao;dataEmissao;sharePointLane;motivoAtraso</pre></div>
-              <div class="detail-box"><h5>Importação inteligente</h5><pre>• evita pedido repetido
+    <div class="card">
+      <h2>Importação por Relatório (CSV)</h2>
+      <p class="subtext">Recebe o arquivo dos pedidos e monta/atualiza os blocos conforme a data do pedido.</p>
+      <div class="toolbar">
+        <label class="btn btn-success" for="csvImportFile">📥 Importar CSV</label>
+        <input id="csvImportFile" class="hidden" type="file" accept=".csv,text/csv" onchange="App.importCSV(event)">
+        <button class="btn" onclick="App.downloadCsvTemplate()">📄 Baixar Modelo CSV</button>
+      </div>
+      <div class="details-grid" style="margin-top:14px;">
+        <div class="detail-box"><h5>Modelo esperado</h5><pre>pedido;destinatario;uf;requisicao;nf;valor;status;operacao;dataEntrada;responsavel;carga;urgente;observacao;dataEmissao;sharePointLane;motivoAtraso</pre></div>
+        <div class="detail-box"><h5>Importação inteligente</h5><pre>• evita pedido repetido
 • evita NF repetida
 • reaproveita bloco do mesmo dia
 • mapeia colunas reais do relatório
 • valida datas, valores e campos obrigatórios</pre></div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="card"><h2>Painel de Cards / Colunas</h2><p class="subtext">Simulação visual das 3 colunas do SharePoint: LIBERADOS, EXPEDIDO e FINALIZADAS.</p><div id="kanbanBoard" class="kanban"></div></div>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>Painel de Cards / Colunas</h2>
+      <p class="subtext">Simulação visual das 3 colunas do SharePoint: LIBERADOS, EXPEDIDO e FINALIZADAS.</p>
+      <div id="kanbanBoard" class="kanban"></div>
+    </div>
+  </div>
+</div>
 
       <div class="card">
         <div class="toolbar" style="justify-content:space-between;">
@@ -304,7 +307,8 @@ delayedBillingPromptOpen: false,
   fmtDateTime(v){ if(!v) return '-'; const d = new Date(v); return isNaN(d.getTime()) ? v : d.toLocaleString('pt-BR'); },
   fmtMoney(v){ return Number(v || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); },
   
-  escapeHtml(value){
+  
+escapeHtml(value){
   return String(value ?? '')
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
@@ -312,6 +316,7 @@ delayedBillingPromptOpen: false,
     .replace(/"/g,'&quot;')
     .replace(/'/g,'&#039;');
 },
+
 
   normalizeText(v){ return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase(); },
   normalizeHeader(v){ return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'').replace(/[^a-zA-Z0-9]/g,'').toLowerCase(); },
@@ -374,7 +379,7 @@ delayedBillingPromptOpen: false,
     }
 
     try{
-      const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+      const API_BASE = 'http://10.100.20.142:5001';
 
       const response = await fetch(`${apiBase}/save`, {
         method: 'POST',
@@ -389,11 +394,12 @@ delayedBillingPromptOpen: false,
       }
 
       this.dbDirty = false;
-      this.lastDbSyncAt = new Date().toISOString();
-      this.saveSyncState();
+this.lastDbSyncAt = new Date().toISOString();
+this._lastHash = JSON.stringify(this.db.blocks || []);
+this.saveSyncState();
 
-      console.log('✅ Banco sincronizado com sucesso.');
-      return data;
+console.log('✅ Banco sincronizado com sucesso.');
+return data;
     }catch(error){
       console.error('❌ Erro ao sincronizar banco:', error);
       throw error;
@@ -407,7 +413,7 @@ delayedBillingPromptOpen: false,
     }
 
     try{
-      const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+      const API_BASE = 'http://10.100.20.142:5001';
 
       const response = await fetch(`${apiBase}/backup`, {
         method: 'POST',
@@ -423,13 +429,14 @@ delayedBillingPromptOpen: false,
 
       // backup também salva banco no backend
       this.dbDirty = false;
-      this.backupDirty = false;
-      this.lastDbSyncAt = new Date().toISOString();
-      this.lastBackupAt = new Date().toISOString();
-      this.saveSyncState();
+this.backupDirty = false;
+this.lastDbSyncAt = new Date().toISOString();
+this.lastBackupAt = new Date().toISOString();
+this._lastHash = JSON.stringify(this.db.blocks || []);
+this.saveSyncState();
 
-      console.log('✅ Backup sincronizado com sucesso.');
-      return data;
+console.log('✅ Backup sincronizado com sucesso.');
+return data;
     }catch(error){
       console.error('❌ Erro ao gerar backup:', error);
       throw error;
@@ -510,7 +517,7 @@ this._saveTimer = setTimeout(() => {
 },
 
 
-async fetchWithTimeout(url, options = {}, timeout = 5001){
+async fetchWithTimeout(url, options = {}, timeout = 8000){
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
 
@@ -527,13 +534,13 @@ async fetchWithTimeout(url, options = {}, timeout = 5001){
 
 async loadFromServer(){
   try{
-    const apiBase = `http://${window.location.hostname || '127.0.0.1'}:5001`;
+    const API_BASE = 'http://10.100.20.142:5001';
     const res = await this.fetchWithTimeout(`${apiBase}/load`);
     const payload = await res.json();
 
-    if(payload && payload.data && (!this.db.blocks || !this.db.blocks.length)){
-      const incoming = payload.data;
+    const incoming = payload?.data || null;
 
+    if(incoming && typeof incoming === 'object'){
       this.db = {
         blocks: Array.isArray(incoming.blocks) ? incoming.blocks : [],
         analyses: Array.isArray(incoming.analyses) ? incoming.analyses : [],
@@ -542,13 +549,13 @@ async loadFromServer(){
         counters: incoming.counters ?? { processSeq: 0, analysisSeq: 0 }
       };
 
-      console.log('✅ Dados carregados do servidor:', payload.source);
+      this._lastHash = JSON.stringify(this.db.blocks || []);
+      console.log('✅ Dados carregados do servidor:', payload.source || 'server');
       return;
     }
 
     return;
-  }
-  catch(e){
+  } catch(e){
     console.warn('⚠️ Backend indisponível, usando localStorage');
   }
 
@@ -580,18 +587,13 @@ async init(){
   // 2) Carrega estado de sincronização
   this.loadSyncState();
 
-  const hasLocalData = Array.isArray(this.db.blocks) && this.db.blocks.length > 0;
-
-  // 3) Se não houver base local, tenta carregar do servidor
-  if(!hasLocalData){
-    try{
-      
-    await this.loadFromServer();
-    this.renderAll();
-
-    } catch(e){
-      console.error("erro load", e);
+  // 3) Se não houver alteração local pendente, tenta puxar do servidor
+  try{
+    if(!this.dbDirty){
+      await this.loadServer(false);
     }
+  } catch(e){
+    console.warn('Falha ao carregar do servidor na abertura:', e.message);
   }
 
   this.migrateData();
@@ -602,8 +604,6 @@ async init(){
   this.startSyncSchedulers();
 
   // 5) Na abertura:
-  // - se o backup estiver pendente E já passou 1 dia desde o último backup, faz backup
-  // - senão, se o banco estiver pendente, sincroniza banco
   if(this.shouldRunBackupOnStartup()){
     this.syncBackupIfNeeded(false).catch(err => {
       console.warn('Falha ao sincronizar backup na abertura:', err.message);
@@ -614,7 +614,6 @@ async init(){
     });
   }
 },
-
 // salva só manual
  
 // setInterval removido
@@ -1272,8 +1271,7 @@ if (typeof document !== 'undefined') {
   </script>
 
   <script>
-const API_HOST = window.location.hostname || '127.0.0.1';
-const API_BASE = `http://${API_HOST}:5001`;
+const API_BASE = 'http://10.100.20.142:5001';
 
  
 App.getServerPayload = function () {
@@ -1322,9 +1320,9 @@ App.loadServer = async function (showAlert = true) {
       throw new Error(data.message || 'Falha ao carregar dados do servidor.');
     }
 
-    const incoming = data.data || data || {};
+    const incoming = data.data || {};
 
-    if(JSON.stringify(this.db.blocks) === JSON.stringify(incoming.blocks || [])){
+    if(JSON.stringify(this.db.blocks || []) === JSON.stringify(incoming.blocks || [])){
       return data;
     }
 
@@ -1336,7 +1334,7 @@ App.loadServer = async function (showAlert = true) {
       counters: incoming.counters ?? { processSeq: 0, analysisSeq: 0 }
     };
 
-    this._lastHash = JSON.stringify(this.db.blocks);
+    this._lastHash = JSON.stringify(this.db.blocks || []);
 
     if (typeof this.migrateData === 'function') this.migrateData();
     if (typeof this.ensureDefaults === 'function') this.ensureDefaults();
