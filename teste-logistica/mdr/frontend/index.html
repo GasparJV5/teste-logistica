@@ -52,14 +52,63 @@
     th,td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:top} th{background:var(--panel2);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.6px;position:sticky;top:0;z-index:1}
     tr:hover td{background:rgba(255,255,255,.02)} .row-urgent td{background:rgba(239,68,68,0.15); border-left: 4px solid #ef4444;} .row-late td{box-shadow:inset 4px 0 0 rgba(245,158,11,.9)}
     .input-inline,.select-inline{width:100%;padding:7px 8px;border-radius:8px;border:1px solid #475569;background:rgba(15,23,42,.96);color:var(--text,#e5e7eb);font-size:12px;outline:none}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+    
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
     .b-info{background:rgba(56,189,248,.12);color:#7dd3fc}.b-warning{background:rgba(245,158,11,.12);color:#fbbf24}.b-success{background:rgba(16,185,129,.12);color:#6ee7b7}.b-danger{background:rgba(239,68,68,.12);color:#fca5a5}.b-violet{background:rgba(139,92,246,.12);color:#c4b5fd}.b-muted{background:rgba(148,163,184,.16);color:#cbd5e1}
     .muted{color:var(--muted)}.hidden{display:none !important}
     .kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lane{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(11,18,32,.9);min-height:150px}.lane h4{margin:0 0 10px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
     .mini-card{padding:10px;border-radius:12px;background:rgba(30,41,59,.95);border:1px solid var(--border);margin-bottom:8px}.mini-card b{display:block;margin-bottom:4px}.mini-card small{color:var(--muted)}
     .details-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.detail-box{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(11,18,32,.85)}.detail-box h5{margin:0 0 8px;font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}.detail-box pre{white-space:pre-wrap;margin:0;font-size:12px;color:var(--text,#e5e7eb);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     .block-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.block-chip{border:1px solid var(--border);background:rgba(11,18,32,.85);border-radius:10px;padding:10px 12px;cursor:pointer;min-width:190px}.block-chip.active{border-color:var(--accent2);box-shadow:0 0 0 1px rgba(56,189,248,.35)}.block-chip .title{font-weight:800}.block-chip .meta{font-size:11px;color:var(--muted);margin-top:4px}
-    .history-cell{font-size:11px;line-height:1.45;max-width:280px;color:#cbd5e1}.status-col{display:flex;flex-direction:column;gap:6px}
+    
+.history-cell{
+  font-size:11px;
+  line-height:1.45;
+  max-width:260px;
+  width:260px;
+  color:#cbd5e1;
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
+.text-break{
+  max-width:220px;
+  width:220px;
+  min-width:220px;
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
+.text-break .inline-notes{
+  margin-top:6px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  max-width:100%;
+}
+
+.text-break .inline-notes .badge{
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  width:100%;
+  justify-content:flex-start;
+}
+
     details.archive-card{border:1px solid var(--border);border-radius:12px;background:rgba(11,18,32,.85);margin-bottom:12px;overflow:hidden} details.archive-card summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap} details.archive-card summary::-webkit-details-marker{display:none}.archive-summary-title{font-weight:800}.archive-summary-meta{font-size:12px;color:var(--muted);margin-top:4px}.archive-body{padding:0 16px 16px;border-top:1px solid var(--border)}
     .modal-overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.72);z-index:1000}.modal-overlay.show{display:flex}.modal{width:min(1280px,100%);max-height:92vh;overflow:auto;background:linear-gradient(180deg,rgba(30,41,59,.98),rgba(15,23,42,.98));border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:var(--shadow)}.modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
     .status-flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
@@ -84,7 +133,7 @@
         <label class="btn" for="importJsonFile">📥 Importar JSON</label>
         <input id="importJsonFile" class="hidden" type="file" accept=".json" onchange="App.importJSON(event)">
         <button class="btn" onclick="App.exportCSV()">📊 Exportar CSV Geral</button>
-        <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+       <!-- <button class="btn" onclick="window.print()">🖨️ Imprimir</button>> -->
         <button class="btn btn-danger" onclick="App.resetAll()">♻️ Limpar Base</button>
       </div>
        
@@ -95,6 +144,13 @@
 </div>
 
     </header>
+    <div class="signal no-print">
+  <b>Exportar JSON:</b> salva uma cópia completa da base do sistema.<br>
+  <b>Importar JSON:</b> restaura uma base exportada anteriormente.<br>
+  <b>Exportar CSV Geral:</b> gera uma planilha resumida com todos os processos.<br>
+  <b>Salvar no Servidor:</b> envia a base atual para a base central compartilhada.<br>
+  <b>Carregar do Servidor:</b> traz a versão mais recente da base central.
+</div>
 
     <nav class="tabs no-print">
       <button class="tab-btn active" data-page="page1" onclick="App.switchPage('page1', event)">1. Operação / Blocos do Dia</button>
@@ -161,7 +217,7 @@
       </form>
     </div>
 
-    <div class="card">
+    <!-- <div class="card">
       <h2>Importação por Relatório (CSV)</h2>
       <p class="subtext">Recebe o arquivo dos pedidos e monta/atualiza os blocos conforme a data do pedido.</p>
       <div class="toolbar">
@@ -169,15 +225,15 @@
         <input id="csvImportFile" class="hidden" type="file" accept=".csv,text/csv" onchange="App.importCSV(event)">
         <button class="btn" onclick="App.downloadCsvTemplate()">📄 Baixar Modelo CSV</button>
       </div>
-      <div class="details-grid" style="margin-top:14px;">
+     <div class="details-grid" style="margin-top:14px;">
         <div class="detail-box"><h5>Modelo esperado</h5><pre>pedido;destinatario;uf;requisicao;nf;valor;status;operacao;dataEntrada;responsavel;carga;urgente;observacao;dataEmissao;sharePointLane;motivoAtraso</pre></div>
         <div class="detail-box"><h5>Importação inteligente</h5><pre>• evita pedido repetido
 • evita NF repetida
 • reaproveita bloco do mesmo dia
 • mapeia colunas reais do relatório
-• valida datas, valores e campos obrigatórios</pre></div>
+• valida datas, valores e campos obrigatórios</pre></div> 
       </div>
-    </div>
+    </div>-->
   </div>
 
   <div>
@@ -196,7 +252,7 @@
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Bloco / Processo</th><th>Carga</th><th>Pedido / Cliente</th><th>UF</th><th>Documentos</th><th>Valor / Emissão</th><th>Modal</th><th>Status</th><th>Coluna SharePoint</th><th>Urgente</th><th>Obs.</th><th>Histórico</th><th class="no-print">Ações</th></tr></thead>
+            <thead><tr><th>Bloco / Processo</th><th>Carga</th><th>Pedido / Cliente</th><th>UF</th><th>Documentos</th><th>Valor / Emissão</th><th>Modal</th><th>Status</th><th>Coluna SharePoint</th><th>Urgente</th><th>Conferência</th><th>LOG?</th><th>Obs.</th><th>Histórico</th><th class="no-print">Ações</th></tr></thead>
             <tbody id="page1TableBody"></tbody>
           </table>
         </div>
@@ -206,11 +262,7 @@
     <section id="page3" class="page">
       <div class="signal no-print"><b>PÁGINA 3:</b> painel calculado com base em todos os blocos criados.</div>
       <div class="grid-kpi">
-        <div class="kpi info" onclick="App.openTimeKpiModal('createToRelease')"><h4>Média Criado × Liberado</h4><p id="kpiTempoCriadoLiberado">0h</p></div>
-        <div class="kpi success" onclick="App.openTimeKpiModal('untilConclusion')"><h4>Média Até Concluir</h4><p id="kpiTempoAteConcluir">0h</p></div>
-        <div class="kpi violet" onclick="App.openTimeKpiModal('createToSep')"><h4>Média Criado → Separação</h4><p id="kpiTempoCriadoSeparacao">0h</p></div>
-        <div class="kpi warning" onclick="App.openTimeKpiModal('sepToFat')"><h4>Média Separação → Faturamento</h4><p id="kpiTempoSeparacaoFaturamento">0h</p></div>
-        <div class="kpi info" onclick="App.openTimeKpiModal('fatToExp')"><h4>Média Faturamento → Expedição</h4><p id="kpiTempoFaturamentoExpedicao">0h</p></div>
+        
         <div class="kpi info" onclick="App.openTimeKpiModal('totalProc')"><h4>Total de Processos</h4><p id="kpiMgmtTotal">0</p></div>
         <div class="kpi success" onclick="App.openTimeKpiModal('done')"><h4>Concluídos</h4><p id="kpiDoneMgmt">0</p></div>
         <div class="kpi violet" onclick="App.openTimeKpiModal('faturadas')"><h4>Faturadas</h4><p id="kpiMgmtFaturadas">0</p></div>
@@ -373,75 +425,70 @@ escapeHtml(value){
   },
 
   async syncDatabaseIfNeeded(force = false){
-    if(!force && !this.dbDirty){
-      console.log('⏭️ Banco: sem alterações pendentes.');
-      return { skipped: true, reason: 'no_db_changes' };
+  if(!force && !this.dbDirty){
+    console.log('⏭️ Banco: sem alterações pendentes.');
+    return { skipped: true, reason: 'no_db_changes' };
+  }
+
+  try{
+    const response = await fetch(`${API_BASE}/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
+    });
+
+    const data = await response.json();
+
+    if(!response.ok){
+      throw new Error(data.message || 'Falha ao sincronizar banco.');
     }
 
-    try{
-      const API_BASE = 'http://10.100.20.142:5001';
+    this.dbDirty = false;
+    this.lastDbSyncAt = new Date().toISOString();
+    this._lastHash = JSON.stringify(this.db.blocks || []);
+    this.saveSyncState();
 
-      const response = await fetch(`${apiBase}/save`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
-      });
-
-      const data = await response.json();
-
-      if(!response.ok){
-        throw new Error(data.message || 'Falha ao sincronizar banco.');
-      }
-
-      this.dbDirty = false;
-this.lastDbSyncAt = new Date().toISOString();
-this._lastHash = JSON.stringify(this.db.blocks || []);
-this.saveSyncState();
-
-console.log('✅ Banco sincronizado com sucesso.');
-return data;
-    }catch(error){
-      console.error('❌ Erro ao sincronizar banco:', error);
-      throw error;
-    }
-  },
+    console.log('✅ Banco sincronizado com sucesso.');
+    return data;
+  }catch(error){
+    console.error('❌ Erro ao sincronizar banco:', error);
+    throw error;
+  }
+},
 
   async syncBackupIfNeeded(force = false){
-    if(!force && !this.backupDirty){
-      console.log('⏭️ Backup: sem alterações pendentes.');
-      return { skipped: true, reason: 'no_backup_changes' };
+  if(!force && !this.backupDirty){
+    console.log('⏭️ Backup: sem alterações pendentes.');
+    return { skipped: true, reason: 'no_backup_changes' };
+  }
+
+  try{
+    const response = await fetch(`${API_BASE}/backup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
+    });
+
+    const data = await response.json();
+
+    if(!response.ok){
+      throw new Error(data.message || 'Falha ao gerar backup.');
     }
 
-    try{
-      const API_BASE = 'http://10.100.20.142:5001';
+    this.dbDirty = false;
+    this.backupDirty = false;
+    this.lastDbSyncAt = new Date().toISOString();
+    this.lastBackupAt = new Date().toISOString();
+    this._lastHash = JSON.stringify(this.db.blocks || []);
+    this.saveSyncState();
 
-      const response = await fetch(`${apiBase}/backup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.getServerPayload ? this.getServerPayload() : this.db)
-      });
-
-      const data = await response.json();
-
-      if(!response.ok){
-        throw new Error(data.message || 'Falha ao gerar backup.');
-      }
-
-      // backup também salva banco no backend
-      this.dbDirty = false;
-this.backupDirty = false;
-this.lastDbSyncAt = new Date().toISOString();
-this.lastBackupAt = new Date().toISOString();
-this._lastHash = JSON.stringify(this.db.blocks || []);
-this.saveSyncState();
-
-console.log('✅ Backup sincronizado com sucesso.');
-return data;
-    }catch(error){
-      console.error('❌ Erro ao gerar backup:', error);
-      throw error;
-    }
-  },
+    console.log('✅ Backup sincronizado com sucesso.');
+    return data;
+  }catch(error){
+    console.error('❌ Erro ao gerar backup:', error);
+    throw error;
+  }
+},
 
   startSyncSchedulers(){
   this._lastHash = JSON.stringify(this.db.blocks || []);
@@ -534,8 +581,7 @@ async fetchWithTimeout(url, options = {}, timeout = 8000){
 
 async loadFromServer(){
   try{
-    const API_BASE = 'http://10.100.20.142:5001';
-    const res = await this.fetchWithTimeout(`${apiBase}/load`);
+    const res = await this.fetchWithTimeout(`${API_BASE}/load`);
     const payload = await res.json();
 
     const incoming = payload?.data || null;
@@ -577,7 +623,7 @@ renderAll(){
 
   load(){ if(typeof localStorage==='undefined') return; const read = key => { try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }; const raw = read(this.storageKey) || read(this.backupKey); if(raw && typeof raw === 'object'){ this.db.blocks = Array.isArray(raw.blocks) ? raw.blocks : []; this.db.analyses = Array.isArray(raw.analyses) ? raw.analyses : []; this.db.imports = Array.isArray(raw.imports) ? raw.imports : []; this.db.activeBlockId = raw.activeBlockId || null; this.db.counters = raw.counters || { processSeq: 0, analysisSeq: 0 }; } },
   migrateData(){ this.db.counters = this.db.counters || { processSeq: 0, analysisSeq: 0 }; let maxProc=Number(this.db.counters.processSeq || 0); this.db.blocks = (this.db.blocks || []).map(block => { const safe={...block}; safe.note = safe.note || ''; safe.history = Array.isArray(safe.history) ? safe.history : []; safe.entries = (safe.entries || []).map(p => { const item = this.ensureProcessDefaults(p); const m=String(item.processCode || '').match(/-(\d{6})$/); if(m) maxProc = Math.max(maxProc, Number(m[1])); return item; }); return safe; }); this.db.counters.processSeq = maxProc; },
-  ensureProcessDefaults(p){ const process = {...p}; process.id = process.id || (Date.now()+Math.floor(Math.random()*1000)); process.processCode = process.processCode || this.nextProcessCode(); process.dataEntrada = process.dataEntrada || this.toDateInput(new Date()); process.createdAt = process.createdAt || this.nowIso(); process.updatedAt = process.updatedAt || this.nowIso(); process.finishedAt = process.finishedAt || null; process.responsavel = process.responsavel || 'NÃO INFORMADO'; process.operacao = process.operacao || 'VENDA'; process.carga = process.carga || ''; process.pedido = process.pedido || ''; process.destinatario = process.destinatario || ''; process.uf = String(process.uf || '').toUpperCase(); process.urgente = Boolean(process.urgente); process.requisicao = process.requisicao || ''; process.nf = process.nf || ''; process.valorNf = Number(process.valorNf || 0); process.dataEmissao = process.dataEmissao || ''; const normalizedStatus = this.normalizeStatus(process.status); process.status = normalizedStatus || process.status || 'AGUARDANDO REQUISIÇÃO'; process.previousStatus = process.previousStatus || ''; process.sharePointLane = process.sharePointLane || ''; process.obs = process.obs || ''; process.history = Array.isArray(process.history) ? process.history : []; process.stageTimeline = Array.isArray(process.stageTimeline) ? process.stageTimeline : []; process.currentStatusStartedAt = process.currentStatusStartedAt || process.createdAt || this.nowIso(); process.origin = process.origin || 'MANUAL'; process.conferenciaData = process.conferenciaData || ''; process.conferenciaAssinatura = process.conferenciaAssinatura || ''; process.expedicaoData = process.expedicaoData || ''; process.expedicaoAssinatura = process.expedicaoAssinatura || ''; process.delayReason = process.delayReason || ''; process.delayReasonRequestedAt = process.delayReasonRequestedAt || ''; process.calledInfo = process.calledInfo || { ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }; process.calledUpdatedAt = process.calledUpdatedAt || ''; process.calledLastReminderAt = process.calledLastReminderAt || ''; process.cancelReason = process.cancelReason || ''; process.modal = this.calculateModal(process.uf, process.nf); process.sharePointLane = this.deriveLaneFromFields(process) || process.sharePointLane || ''; if(!process.stageTimeline.length){ process.stageTimeline.push({ id: Date.now()+Math.floor(Math.random()*1000), status: process.status, start: process.currentStatusStartedAt, end: null, durationHours: 0 }); } return process; },
+  ensureProcessDefaults(p){ const process = {...p}; process.id = process.id || (Date.now()+Math.floor(Math.random()*1000)); process.processCode = process.processCode || this.nextProcessCode(); process.dataEntrada = process.dataEntrada || this.toDateInput(new Date()); process.createdAt = process.createdAt || this.nowIso(); process.updatedAt = process.updatedAt || this.nowIso(); process.finishedAt = process.finishedAt || null; process.responsavel = process.responsavel || 'NÃO INFORMADO'; process.operacao = process.operacao || 'VENDA'; process.carga = process.carga || ''; process.pedido = process.pedido || ''; process.destinatario = process.destinatario || ''; process.uf = String(process.uf || '').toUpperCase(); process.urgente = Boolean(process.urgente); process.requisicao = process.requisicao || ''; process.nf = process.nf || ''; process.valorNf = Number(process.valorNf || 0); process.dataEmissao = process.dataEmissao || ''; const normalizedStatus = this.normalizeStatus(process.status); process.status = normalizedStatus || process.status || 'AGUARDANDO REQUISIÇÃO'; process.previousStatus = process.previousStatus || ''; process.sharePointLane = process.sharePointLane || ''; process.conferido = Boolean(process.conferido); process.isLog = Boolean(process.isLog); process.obs = process.obs || ''; process.history = Array.isArray(process.history) ? process.history : []; process.stageTimeline = Array.isArray(process.stageTimeline) ? process.stageTimeline : []; process.currentStatusStartedAt = process.currentStatusStartedAt || process.createdAt || this.nowIso(); process.origin = process.origin || 'MANUAL'; process.conferenciaData = process.conferenciaData || ''; process.conferenciaAssinatura = process.conferenciaAssinatura || ''; process.expedicaoData = process.expedicaoData || ''; process.expedicaoAssinatura = process.expedicaoAssinatura || ''; process.delayReason = process.delayReason || ''; process.delayReasonRequestedAt = process.delayReasonRequestedAt || ''; process.calledInfo = process.calledInfo || { ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }; process.calledUpdatedAt = process.calledUpdatedAt || ''; process.calledLastReminderAt = process.calledLastReminderAt || ''; process.cancelReason = process.cancelReason || ''; process.modal = this.calculateModal(process.uf, process.nf); process.sharePointLane = this.deriveLaneFromFields(process) || process.sharePointLane || ''; if(!process.stageTimeline.length){ process.stageTimeline.push({ id: Date.now()+Math.floor(Math.random()*1000), status: process.status, start: process.currentStatusStartedAt, end: null, durationHours: 0 }); } return process; },
   ensureDefaults(){ const today=this.toDateInput(new Date()); const blockDate=this.getEl('blockDate'), pDataEntrada=this.getEl('pDataEntrada'); if(blockDate && !blockDate.value) blockDate.value=today; if(pDataEntrada && !pDataEntrada.value) pDataEntrada.value=today; if(!this.db.activeBlockId){ const open=this.getOpenBlockByDate(today) || this.getOpenBlocks()[0]; if(open) this.db.activeBlockId=open.id; } },
   
 async init(){
@@ -621,7 +667,11 @@ async init(){
  switchPage(pageId,event){ if(typeof document==='undefined') return; document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); this.getEl(pageId).classList.add('active'); if(event) event.target.classList.add('active'); },
 
   getOpenBlocks(){ return this.db.blocks.filter(b => !b.archived).sort((a,b)=>a.date.localeCompare(b.date)); },
-  getArchivedBlocks(){ return this.db.blocks.filter(b => b.archived).sort((a,b)=>new Date(b.closedAt||0)-new Date(a.closedAt||0)); },
+ getArchivedBlocks(){
+  return this.db.blocks
+    .filter(b => b.archived)
+    .sort((a,b)=> a.date.localeCompare(b.date));
+},
   getBlock(id){ return this.db.blocks.find(b => Number(b.id)===Number(id)); },
   getActiveBlock(){ return this.getBlock(this.db.activeBlockId); },
   getOpenBlockByDate(date){ return this.db.blocks.find(b => b.date===date && !b.archived); },
@@ -629,11 +679,77 @@ async init(){
   getProcess(id){ for(const block of this.db.blocks){ const found=(block.entries || []).find(p => Number(p.id)===Number(id)); if(found) return { process: found, block }; } return null; },
   getDuplicatePedido(pedido, exceptId=null){ const norm=this.normalizeText(pedido); if(!norm) return null; return this.getAllProcesses().find(p => Number(p.id)!==Number(exceptId) && this.normalizeText(p.pedido)===norm) || null; },
   getDuplicateNf(nf, exceptId=null){ const norm=this.normalizeText(nf); if(!norm) return null; return this.getAllProcesses().find(p => Number(p.id)!==Number(exceptId) && this.normalizeText(p.nf)===norm) || null; },
+  getOpenBlocksByDate(date){
+  return this.db.blocks
+    .filter(b => b.date === date && !b.archived)
+    .sort((a,b) => Number(a.sequence || 0) - Number(b.sequence || 0));
+},
+getNextBlockSequence(date){
+  const sameDate = this.db.blocks.filter(b => b.date === date);
+  if(!sameDate.length) return 1;
+  return Math.max(...sameDate.map(b => Number(b.sequence || 1))) + 1;
+},
 
-  createBlock(date,note=''){ const existing=this.getOpenBlockByDate(date); if(existing) return existing; if(this.db.blocks.find(b => b.date===date && b.archived)) return null; const block={ id: Date.now()+Math.floor(Math.random()*1000), date, note, createdAt:this.nowIso(), closedAt:null, archived:false, entries:[], history:[this.makeHistory('BLOCO','Bloco criado.',{date})] }; this.db.blocks.push(block); this.saveSafe(); return block; },
-  createOrLoadBlock(){ const date=(this.getEl('blockDate')?.value) || this.toDateInput(new Date()); const note=(this.getEl('blockNote')?.value || '').trim(); if(this.db.blocks.find(b => b.date===date && b.archived)){ alert('Já existe um bloco FECHADO para essa data. Consulte a aba de Gestão / Arquivados.'); return; } let block=this.getOpenBlockByDate(date); if(!block){ block=this.createBlock(date,note); if(!block){ alert('Não foi possível criar o bloco.'); return; } } else if(note){ block.note=note; block.history.unshift(this.makeHistory('BLOCO', `Observação do bloco atualizada para: ${note}`)); } this.db.activeBlockId=block.id; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=block.date; this.saveSafe(); this.renderAll(); },
+  createBlock(date,note=''){
+  const sequence = this.getNextBlockSequence(date);
+
+  const block = {
+    id: Date.now() + Math.floor(Math.random()*1000),
+    date,
+    note,
+    sequence,
+    label: `Bloco ${sequence}`,
+    createdAt: this.nowIso(),
+    closedAt: null,
+    archived: false,
+    entries: [],
+    history: [
+      this.makeHistory('BLOCO', `Bloco ${sequence} criado.`, { date, sequence })
+    ]
+  };
+
+  this.db.blocks.push(block);
+  this.saveSafe();
+  return block;
+},
+  createOrLoadBlock(){
+  const date = (this.getEl('blockDate')?.value) || this.toDateInput(new Date());
+  const note = (this.getEl('blockNote')?.value || '').trim();
+
+  const block = this.createBlock(date, note);
+
+  if(!block){
+    alert('Não foi possível criar o bloco.');
+    return;
+  }
+
+  this.db.activeBlockId = block.id;
+
+  if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value = block.date;
+
+  this.saveSafe();
+  this.renderAll();
+},
   activateBlock(blockId){ const block=this.getBlock(blockId); if(!block || block.archived) return; this.db.activeBlockId=block.id; if(this.getEl('blockDate')) this.getEl('blockDate').value=block.date; if(this.getEl('blockNote')) this.getEl('blockNote').value=block.note || ''; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=block.date; this.renderAll(); },
-  renderOpenBlocks(){ const wrap=this.getEl('openBlocksList'); if(!wrap) return; const blocks=this.getOpenBlocks(); const activeId=this.db.activeBlockId; if(!blocks.length){ wrap.innerHTML='<div class="muted">Nenhum bloco aberto. Crie ou carregue um bloco para começar.</div>'; return; } wrap.innerHTML=blocks.map(block => `<div class="block-chip ${Number(activeId)===Number(block.id)?'active':''}" onclick="App.activateBlock(${block.id})"><div class="title">📅 ${App.fmtDate(block.date)}</div><div class="meta">${block.entries.length} pedido(s) • ${App.escapeHtml(block.note || 'Sem observação')}</div></div>`).join(''); },
+ renderOpenBlocks(){
+  const wrap=this.getEl('openBlocksList');
+  if(!wrap) return;
+
+  const blocks=this.getOpenBlocks();
+  const activeId=this.db.activeBlockId;
+
+  if(!blocks.length){
+    wrap.innerHTML='<div class="muted">Nenhum bloco aberto. Crie ou carregue um bloco para começar.</div>';
+    return;
+  }
+
+  wrap.innerHTML=blocks.map(block => `
+    <div class="block-chip ${Number(activeId)===Number(block.id)?'active':''}" onclick="App.activateBlock(${block.id})">
+      <div class="title">📅 ${App.fmtDate(block.date)} • ${App.escapeHtml(block.label || `Bloco ${block.sequence || 1}`)}</div>
+      <div class="meta">${block.entries.length} pedido(s) • ${App.escapeHtml(block.note || 'Sem observação')}</div>
+    </div>
+  `).join('');
+},
   closeActiveBlock(){ const block=this.getActiveBlock(); if(!block){ alert('Nenhum bloco ativo.'); return; } if(!confirm(`Fechar o bloco de ${this.fmtDate(block.date)}?`)) return; block.archived=true; block.closedAt=this.nowIso(); block.history.unshift(this.makeHistory('BLOCO', `Bloco fechado com ${block.entries.length} processo(s).`)); block.entries.forEach(p => { if(!['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)) p.history.unshift(this.makeHistory('BLOCO', `Bloco ${block.date} fechado com processo ainda aberto no status ${p.status}.`)); p.updatedAt=this.nowIso(); }); this.db.activeBlockId=null; const nextOpen=this.getOpenBlocks()[0]; if(nextOpen){ this.db.activeBlockId=nextOpen.id; if(this.getEl('blockDate')) this.getEl('blockDate').value=nextOpen.date; if(this.getEl('blockNote')) this.getEl('blockNote').value=nextOpen.note || ''; if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=nextOpen.date; } this.saveSafe(); this.renderAll(); },
   clearCurrentBlockEntries(){ const block=this.getActiveBlock(); if(!block){ alert('Nenhum bloco ativo.'); return; } if(!confirm(`Apagar todos os processos do bloco ${this.fmtDate(block.date)}?`)) return; block.entries=[]; block.history.unshift(this.makeHistory('BLOCO','Todas as entradas do bloco foram apagadas.')); this.saveSafe(); this.renderAll(); },
   deleteActiveBlock(){
@@ -738,12 +854,70 @@ openCalledPrompt(process, mode='new'){
 },
   checkCalledFollowUps(){ if(typeof window === 'undefined') return; const today = this.todayKey(); const pending = this.getAllProcesses().find(p => { if(p.archived) return false; if(p.status !== 'CHAMADO') return false; return (p.calledLastReminderAt || '') !== today; }); if(!pending) return; const ref = this.getProcess(pending.id); if(!ref || ref.block.archived) return; const process = ref.process; const confirmUpdate = window.confirm(`O pedido ${process.pedido} continua em CHAMADO.\nDeseja atualizar o andamento agora?`); process.calledLastReminderAt = today; if(confirmUpdate){ const newCalledInfo = this.openCalledPrompt(process, 'reminder'); if(newCalledInfo){ process.calledInfo = newCalledInfo; process.calledUpdatedAt = this.nowIso(); process.history.unshift(this.makeHistory('CHAMADO', `Chamado atualizado. Nº ${newCalledInfo.ticketNumber || 'SEM NÚMERO'} — ${newCalledInfo.progressCurrent || 'Sem andamento informado.'}`)); } else { process.history.unshift(this.makeHistory('CHAMADO', 'Lembrete de atualização do chamado exibido, sem alteração.')); } } else { process.history.unshift(this.makeHistory('CHAMADO', 'Lembrete diário de chamado exibido e adiado pelo usuário.')); } process.updatedAt = this.nowIso(); this.saveSafe(); },
 
-  createProcess(){ const active=this.getActiveBlock(); if(!active){ alert('Crie ou carregue um bloco antes de cadastrar processos.'); return; } const pedido=(this.getEl('pPedido')?.value || '').trim(); if(!pedido){ alert('Pedido é obrigatório.'); return; } const dupPedido=this.getDuplicatePedido(pedido); if(dupPedido){ alert(`Pedido repetido detectado: ${pedido}. Já existe no bloco ${dupPedido.blockDate || '-'} (${dupPedido.processCode}).`); return; } const selectedInitial=this.getEl('pStatusInicial')?.value || 'NOVO'; const effective=selectedInitial==='NOVO' ? 'AGUARDANDO REQUISIÇÃO' : selectedInitial; const p={ id: Date.now()+Math.floor(Math.random()*1000), processCode:this.nextProcessCode(), dataEntrada:this.getEl('pDataEntrada')?.value || active.date || this.toDateInput(new Date()), createdAt:this.nowIso(), updatedAt:this.nowIso(), finishedAt:null, responsavel:(this.getEl('pResponsavel')?.value || '').trim() || 'NÃO INFORMADO', operacao:this.getEl('pOperacao')?.value || 'VENDA', carga:(this.getEl('pCarga')?.value || '').trim(), pedido, destinatario:(this.getEl('pDestinatario')?.value || '').trim(), uf:(this.getEl('pUf')?.value || '').trim().toUpperCase(), urgente:Boolean(this.getEl('pUrgente')?.checked), requisicao:'', nf:'', valorNf:0, dataEmissao:'', status:effective, previousStatus:selectedInitial, sharePointLane:'', modal:'---', obs:(this.getEl('pObs')?.value || '').trim(), history:[], stageTimeline:[], currentStatusStartedAt:this.nowIso(), origin:'MANUAL', conferenciaData:'', conferenciaAssinatura:'', expedicaoData:'', expedicaoAssinatura:'', delayReason:'', delayReasonRequestedAt:'', calledInfo:{ ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }, calledUpdatedAt:'', calledLastReminderAt:'', cancelReason:'' }; p.modal=this.calculateModal(p.uf,p.nf); p.sharePointLane=this.deriveLaneFromFields(p); p.history.unshift(this.makeHistory('CRIACAO', `Processo criado. Status inicial efetivo: ${effective}.`)); if(selectedInitial==='NOVO') p.history.unshift(this.makeHistory('REGRA','Ao incluir, status NOVO foi convertido para AGUARDANDO REQUISIÇÃO.')); p.stageTimeline.push({ id: Date.now()+1, status:p.status, start:p.currentStatusStartedAt, end:null, durationHours:0 }); active.entries.unshift(p); active.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} incluído no bloco.`)); this.clearProcessForm(); this.saveSafe(); this.renderAll();
+  createProcess(){ const active=this.getActiveBlock(); if(!active){ alert('Crie ou carregue um bloco antes de cadastrar processos.'); return; } const pedido=(this.getEl('pPedido')?.value || '').trim(); if(!pedido){ alert('Pedido é obrigatório.'); return; } const dupPedido=this.getDuplicatePedido(pedido); if(dupPedido){ alert(`Pedido repetido detectado: ${pedido}. Já existe no bloco ${dupPedido.blockDate || '-'} (${dupPedido.processCode}).`); return; } const selectedInitial=this.getEl('pStatusInicial')?.value || 'NOVO'; const effective=selectedInitial==='NOVO' ? 'AGUARDANDO REQUISIÇÃO' : selectedInitial; const p={ id: Date.now()+Math.floor(Math.random()*1000), processCode:this.nextProcessCode(), dataEntrada:this.getEl('pDataEntrada')?.value || active.date || this.toDateInput(new Date()), createdAt:this.nowIso(), updatedAt:this.nowIso(), finishedAt:null, responsavel:(this.getEl('pResponsavel')?.value || '').trim() || 'NÃO INFORMADO', operacao:this.getEl('pOperacao')?.value || 'VENDA', carga:(this.getEl('pCarga')?.value || '').trim(), pedido, destinatario:(this.getEl('pDestinatario')?.value || '').trim(), uf:(this.getEl('pUf')?.value || '').trim().toUpperCase(), urgente:Boolean(this.getEl('pUrgente')?.checked), requisicao:'', nf:'', valorNf:0, dataEmissao:'', status:effective, previousStatus:selectedInitial, sharePointLane:'', conferido:false, isLog:false, modal:'---', obs:(this.getEl('pObs')?.value || '').trim(), history:[], stageTimeline:[], currentStatusStartedAt:this.nowIso(), origin:'MANUAL', conferenciaData:'', conferenciaAssinatura:'', expedicaoData:'', expedicaoAssinatura:'', delayReason:'', delayReasonRequestedAt:'', calledInfo:{ ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }, calledUpdatedAt:'', calledLastReminderAt:'', cancelReason:'' }; p.modal=this.calculateModal(p.uf,p.nf); p.sharePointLane=this.deriveLaneFromFields(p); p.history.unshift(this.makeHistory('CRIACAO', `Processo criado. Status inicial efetivo: ${effective}.`)); if(selectedInitial==='NOVO') p.history.unshift(this.makeHistory('REGRA','Ao incluir, status NOVO foi convertido para AGUARDANDO REQUISIÇÃO.')); p.stageTimeline.push({ id: Date.now()+1, status:p.status, start:p.currentStatusStartedAt, end:null, durationHours:0 }); active.entries.unshift(p); active.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} incluído no bloco.`)); this.clearProcessForm(); this.saveSafe(); this.renderAll();
 
  },
   clearProcessForm(){ ['pCarga','pPedido','pDestinatario','pUf','pObs'].forEach(id => { const el=this.getEl(id); if(el) el.value=''; }); if(this.getEl('pUrgente')) this.getEl('pUrgente').checked=false; if(this.getEl('pStatusInicial')) this.getEl('pStatusInicial').value='NOVO'; const active=this.getActiveBlock(); if(this.getEl('pDataEntrada')) this.getEl('pDataEntrada').value=active ? active.date : this.toDateInput(new Date()); if(this.getEl('pPedido')) this.getEl('pPedido').focus(); },
 
   updateField(id, field, value){ const ref = this.getProcess(id); if(!ref) return; const { process:p, block } = ref; if(block.archived){ alert('O bloco está arquivado. Reabra em nova revisão se quiser editar.'); return; } const oldStatus = p.status; const oldReq = p.requisicao; const oldNf = p.nf; const oldDataEmissao = p.dataEmissao; const oldLane = p.sharePointLane; const oldValue = p[field]; if(field === 'pedido') value = String(value || '').trim(); if(field === 'uf') value = String(value || '').toUpperCase().trim(); if(field === 'valorNf') value = Number(value || 0); if(field === 'pedido'){ const dup = this.getDuplicatePedido(value, id); if(dup){ alert(`Pedido repetido detectado: ${value}. Já existe no bloco ${dup.blockDate || '-'} (${dup.processCode}).`); this.renderAll(); return; } } if(field === 'nf' && String(value || '').trim()){ const dup = this.getDuplicateNf(value, id); if(dup){ alert(`NF repetida detectada: ${value}. Já existe no pedido ${dup.pedido} (${dup.processCode}).`); this.renderAll(); return; } }
+  if(field === 'conferido'){
+    const newValue = String(value || '').toUpperCase() === 'SIM';
+    const oldConferido = Boolean(p.conferido);
+
+    p.conferido = newValue;
+    p.updatedAt = this.nowIso();
+
+    if(newValue !== oldConferido){
+      p.history.unshift(
+        this.makeHistory('CONFERENCIA', `Conferência alterada para ${newValue ? 'SIM' : 'NÃO'}.`)
+      );
+    }
+
+    if(newValue){
+      const validation = this.validateStatusTransition(p, 'EXPEDIDO');
+
+      if(validation.ok && p.status !== 'EXPEDIDO'){
+        this.closeCurrentTimelineStage(p);
+        p.previousStatus = p.status;
+        p.status = 'EXPEDIDO';
+        p.sharePointLane = 'EXPEDIDO';
+        this.openNewTimelineStage(p, 'EXPEDIDO');
+
+        p.history.unshift(
+          this.makeHistory('STATUS', 'Status alterado automaticamente para EXPEDIDO ao confirmar a conferência.')
+        );
+      } else if(!validation.ok){
+        p.history.unshift(
+          this.makeHistory('CONFERENCIA', `Conferência marcada, mas status não pôde ir para EXPEDIDO: ${validation.message}`)
+        );
+      }
+    }
+
+    block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} teve a conferência alterada.`));
+    this.saveSafe();
+    this.renderAll();
+    return;
+  }
+
+  if(field === 'isLog'){
+    const newValue = String(value || '').toUpperCase() === 'SIM';
+    const oldValue = Boolean(p.isLog);
+
+    p.isLog = newValue;
+    p.updatedAt = this.nowIso();
+
+    if(newValue !== oldValue){
+      p.history.unshift(
+        this.makeHistory('LOG', `Campo LOG alterado para ${newValue ? 'SIM' : 'NÃO'}.`)
+      );
+    }
+
+    block.history.unshift(this.makeHistory('BLOCO', `Processo ${p.pedido} teve o campo LOG alterado.`));
+    this.saveSafe();
+    this.renderAll();
+    return;
+  }
+
   if(field === 'sharePointLane'){
   const lane = this.normalizeLane(value);
   p.sharePointLane = lane;
@@ -774,23 +948,67 @@ openCalledPrompt(process, mode='new'){
   const entries = active ? active.entries : [];
 
   board.innerHTML = this.sharePointLanes.map(lane => {
-    const count = entries.filter(p => p.sharePointLane === lane).length;
+    const laneItems = entries.filter(p => p.sharePointLane === lane);
+
+    const cards = laneItems.map(p => `
+      <div class="mini-card">
+        <b>${this.escapeHtml(p.pedido || '-')}</b>
+        <small>${this.escapeHtml(p.destinatario || '-')}</small><br>
+        <small>${this.escapeHtml(p.processCode || '-')}</small><br>
+        <small>UF: ${this.escapeHtml(p.uf || '-')}</small>
+        ${p.urgente ? '<br><span class="badge b-danger">URGENTE</span>' : ''}
+        ${p.nf ? `<br><small>NF: ${this.escapeHtml(p.nf)}</small>` : ''}
+      </div>
+    `).join('');
 
     return `
-      <div class="lane" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
-        <h4>${this.escapeHtml(lane)}</h4>
-        <div style="font-size:42px;font-weight:900;margin-top:10px;">
-          ${count}
-        </div>
+      <div class="lane">
+        <h4>${this.escapeHtml(lane)} (${laneItems.length})</h4>
+        ${cards || '<div class="muted">Sem pedidos</div>'}
       </div>
     `;
   }).join('');
 },
   renderActiveBlockSummary(){ const wrap=this.getEl('activeBlockSummary'); if(!wrap) return; const block=this.getActiveBlock(); if(!block){ wrap.innerHTML='<div class="detail-box"><h5>Sem bloco ativo</h5><pre>Crie ou carregue um bloco para começar.</pre></div>'; return; } const urg=block.entries.filter(p => p.urgente).length; const late=block.entries.filter(p => this.isBillingLate(p)).length; wrap.innerHTML=`<div class="detail-box"><h5>Bloco Atual</h5><pre>Data: ${this.fmtDate(block.date)}\nCriado em: ${this.fmtDateTime(block.createdAt)}\nObservação: ${this.escapeHtml(block.note || 'Sem observação')}</pre></div><div class="detail-box"><h5>Resumo Operacional</h5><pre>Processos: ${block.entries.length}\nUrgentes: ${urg}\nAtrasados p/ faturar: ${late}\nFechado: ${block.archived ? 'SIM' : 'NÃO'}</pre></div><div class="detail-box"><h5>Último histórico do bloco</h5><pre>${block.history.slice(0,4).map(h => `${this.fmtDateTime(h.date)} - ${h.text}`).join('\n') || 'Sem histórico.'}</pre></div>`; },
-  renderPage1Table(){ const body=this.getEl('page1TableBody'); if(!body) return; const active=this.getActiveBlock(); const term=this.normalizeText(this.getEl('page1Search')?.value || ''); const filterStatus=this.getEl('page1StatusFilter')?.value || ''; if(!active){ body.innerHTML='<tr><td colspan="13" class="muted">Nenhum bloco ativo.</td></tr>'; return; } const laneOptions=current => [''].concat(this.sharePointLanes).map(s => `<option value="${this.escapeHtml(s)}" ${current===s?'selected':''}>${this.escapeHtml(s || 'SEM COLUNA')}</option>`).join(''); const rows=active.entries.filter(p => { const bag=this.normalizeText([p.processCode,p.pedido,p.destinatario,p.nf,p.requisicao,p.status,p.obs,p.carga,p.modal,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || ''].join(' ')); return (!term || bag.includes(term)) && (!filterStatus || p.status===filterStatus); }).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).map(p => { const delayTag=this.isBillingLate(p) ? '<span class="badge b-warning">FATURAR > 1 DIA</span>' : ''; const delayReason=p.delayReason ? `<br><span class="badge b-danger">Motivo: ${this.escapeHtml(p.delayReason)}</span>` : ''; const cancelReason=p.cancelReason ? `<br><span class="badge b-danger">Cancel.: ${this.escapeHtml(p.cancelReason)}</span>` : ''; const calledTag=p.status==='CHAMADO' && p.calledInfo?.ticketNumber ? `<br><span class="badge b-danger">Chamado: ${this.escapeHtml(p.calledInfo.ticketNumber)}</span>` : ''; return `<tr class="${p.urgente?'row-urgent':''} ${this.isBillingLate(p)?'row-late':''}"><td><b>${this.escapeHtml(active.date)}</b><br>${this.escapeHtml(p.processCode)}</td><td><input class="input-inline" value="${this.escapeHtml(p.carga || '')}" onchange="App.updateField(${p.id}, 'carga', this.value)"></td><td><b>${this.escapeHtml(p.pedido)}</b><br><small>${this.escapeHtml(p.destinatario || '-')}</small>${this.renderStatusFlow(p, true)}</td><td><input class="input-inline" value="${this.escapeHtml(p.uf || '')}" onchange="App.updateField(${p.id}, 'uf', this.value)"></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" placeholder="REQ" value="${this.escapeHtml(p.requisicao || '')}" onchange="App.updateField(${p.id}, 'requisicao', this.value)"><input class="input-inline" placeholder="NF" value="${this.escapeHtml(p.nf || '')}" onchange="App.updateField(${p.id}, 'nf', this.value)"></div></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" type="number" min="0" step="0.01" value="${Number(p.valorNf || 0)}" onchange="App.updateField(${p.id}, 'valorNf', this.value)"><input class="input-inline" type="date" value="${this.escapeHtml(p.dataEmissao || '')}" onchange="App.updateField(${p.id}, 'dataEmissao', this.value)"></div></td><td><b>${this.escapeHtml(p.modal || '---')}</b></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'status', this.value)">${this.statuses.map(s => `<option value="${this.escapeHtml(s)}" ${p.status===s?'selected':''}>${this.escapeHtml(s)}</option>`).join('')}</select>${this.getStatusBadge(p.status)}${delayTag}</div></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'sharePointLane', this.value)">${laneOptions(p.sharePointLane || '')}</select>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</div></td><td>${p.urgente ? '<span class="badge b-danger">SIM</span>' : '<span class="badge b-muted">NÃO</span>'}</td><td><input class="input-inline" value="${this.escapeHtml(p.obs || '')}" onchange="App.updateField(${p.id}, 'obs', this.value)">${delayReason}${cancelReason}${calledTag}</td><td class="history-cell">${(p.history || []).slice(0,3).map(h => `${this.fmtDateTime(h.date)} - ${this.escapeHtml(h.text)}`).join('<br>')}</td><td class="no-print"><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-small" onclick="App.showDetails(${p.id})">👁️</button><button class="btn btn-small btn-danger" onclick="App.deleteProcess(${p.id})">🗑️</button></div></td></tr>`; }).join(''); body.innerHTML=rows || '<tr><td colspan="13" class="muted">Nenhum processo encontrado.</td></tr>'; },
+  renderPage1Table(){ const body=this.getEl('page1TableBody'); if(!body) return; const active=this.getActiveBlock(); const term=this.normalizeText(this.getEl('page1Search')?.value || ''); const filterStatus=this.getEl('page1StatusFilter')?.value || ''; if(!active){ body.innerHTML='<tr><td colspan="13" class="muted">Nenhum bloco ativo.</td></tr>'; return; } const laneOptions=current => [''].concat(this.sharePointLanes).map(s => `<option value="${this.escapeHtml(s)}" ${current===s?'selected':''}>${this.escapeHtml(s || 'SEM COLUNA')}</option>`).join(''); const rows=active.entries.filter(p => { const bag=this.normalizeText([p.processCode,p.pedido,p.destinatario,p.nf,p.requisicao,p.status,p.conferido ? 'SIM' : 'NAO',p.isLog ? 'SIM' : 'NAO',p.obs,p.carga,p.modal,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || ''].join(' ')); return (!term || bag.includes(term)) && (!filterStatus || p.status===filterStatus); }).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).map(p => { const delayTag=this.isBillingLate(p) ? '<span class="badge b-warning">FATURAR > 1 DIA</span>' : ''; const delayReason=p.delayReason ? `<br><span class="badge b-danger">Motivo: ${this.escapeHtml(p.delayReason)}</span>` : ''; const cancelReason=p.cancelReason ? `<br><span class="badge b-danger">Cancel.: ${this.escapeHtml(p.cancelReason)}</span>` : ''; const calledSummary = p.status === 'CHAMADO'
+  ? [p.calledInfo?.ticketNumber, p.calledInfo?.reason].filter(Boolean).join(' • ')
+  : '';
+
+const calledTag = calledSummary
+  ? `<span class="badge b-danger">${this.escapeHtml(calledSummary.slice(0, 80))}${calledSummary.length > 80 ? '...' : ''}</span>`
+  : ''; return `<tr class="${p.urgente?'row-urgent':''} ${this.isBillingLate(p)?'row-late':''}"><td><b>${this.escapeHtml(active.date)}</b><br>${this.escapeHtml(p.processCode)}</td><td><input class="input-inline" value="${this.escapeHtml(p.carga || '')}" onchange="App.updateField(${p.id}, 'carga', this.value)"></td><td><b>${this.escapeHtml(p.pedido)}</b><br><small>${this.escapeHtml(p.destinatario || '-')}</small>${this.renderStatusFlow(p, true)}</td><td><input class="input-inline" value="${this.escapeHtml(p.uf || '')}" onchange="App.updateField(${p.id}, 'uf', this.value)"></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" placeholder="REQ" value="${this.escapeHtml(p.requisicao || '')}" onchange="App.updateField(${p.id}, 'requisicao', this.value)"><input class="input-inline" placeholder="NF" value="${this.escapeHtml(p.nf || '')}" onchange="App.updateField(${p.id}, 'nf', this.value)"></div></td><td><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><input class="input-inline" type="number" min="0" step="0.01" value="${Number(p.valorNf || 0)}" onchange="App.updateField(${p.id}, 'valorNf', this.value)"><input class="input-inline" type="date" value="${this.escapeHtml(p.dataEmissao || '')}" onchange="App.updateField(${p.id}, 'dataEmissao', this.value)"></div></td><td><b>${this.escapeHtml(p.modal || '---')}</b></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'status', this.value)">${this.statuses.map(s => `<option value="${this.escapeHtml(s)}" ${p.status===s?'selected':''}>${this.escapeHtml(s)}</option>`).join('')}</select>${this.getStatusBadge(p.status)}${delayTag}</div></td><td><div class="status-col"><select class="select-inline" onchange="App.updateField(${p.id}, 'sharePointLane', this.value)">${laneOptions(p.sharePointLane || '')}</select>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</div></td><td>${p.urgente ? '<span class="badge b-danger">SIM</span>' : '<span class="badge b-muted">NÃO</span>'}</td>
+<td>
+  <select class="select-inline" onchange="App.updateField(${p.id}, 'conferido', this.value)">
+    <option value="NAO" ${!p.conferido ? 'selected' : ''}>NÃO</option>
+    <option value="SIM" ${p.conferido ? 'selected' : ''}>SIM</option>
+  </select>
+</td>
+<td>
+  <select class="select-inline" onchange="App.updateField(${p.id}, 'isLog', this.value)">
+    <option value="NAO" ${!p.isLog ? 'selected' : ''}>NÃO</option>
+    <option value="SIM" ${p.isLog ? 'selected' : ''}>SIM</option>
+  </select>
+</td><td class="text-break">
+  <input class="input-inline" value="${this.escapeHtml(p.obs || '')}" onchange="App.updateField(${p.id}, 'obs', this.value)">
+  <div class="inline-notes">
+    ${delayReason}
+    ${cancelReason}
+    ${calledTag}
+  </div>
+</td><td class="history-cell">${(p.history || []).slice(0,3).map(h => `${this.fmtDateTime(h.date)} - ${this.escapeHtml(h.text)}`).join('<br>')}</td><td class="no-print"><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-small" onclick="App.showDetails(${p.id})">👁️</button><button class="btn btn-small btn-danger" onclick="App.deleteProcess(${p.id})">🗑️</button></div></td></tr>`; }).join(''); body.innerHTML=rows || '<tr><td colspan="15" class="muted">Nenhum processo encontrado.</td></tr>'; },
   checkDelayedBilling(){ if(this.delayedBillingPromptOpen || typeof window==='undefined') return; const target=this.getAllProcesses().find(p => this.isBillingLate(p) && !String(p.delayReason || '').trim() && !p.archived); if(!target) return; this.delayedBillingPromptOpen=true; setTimeout(() => { const ref=this.getProcess(target.id); if(!ref || ref.block.archived){ this.delayedBillingPromptOpen=false; return; } const reason=window.prompt(`O pedido ${ref.process.pedido} está há mais de 1 dia para faturar. Informe o motivo da demora:`, ref.process.delayReason || ''); ref.process.delayReasonRequestedAt=this.nowIso(); ref.process.updatedAt=this.nowIso(); if(reason && reason.trim()){ ref.process.delayReason=reason.trim(); ref.process.history.unshift(this.makeHistory('ATRASO FATURAMENTO', `Motivo informado para a demora no faturamento: ${reason.trim()}`)); } else { ref.process.delayReason=''; ref.process.history.unshift(this.makeHistory('ATRASO FATURAMENTO', 'Pedido com mais de 1 dia para faturar. Motivo ainda não informado.')); } this.delayedBillingPromptOpen=false; this.renderAll(); }, 120); },
 
-  renderPage3KPIs(){ const arr = this.getAllProcesses(); const releaseDurations = arr.map(p => { const rel=this.getReleaseTimestamp(p); return rel ? this.hoursBetween(p.createdAt,rel) : null; }).filter(v => v !== null); const conclusionDurations = arr.map(p => p.finishedAt && p.status==='CONCLUÍDO' ? this.hoursBetween(p.createdAt,p.finishedAt) : null).filter(v => v !== null); const createToSep = arr.map(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO')).filter(v => v !== null); const sepToFat = arr.map(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA')).filter(v => v !== null); const fatToExp = arr.map(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO')).filter(v => v !== null); const avgCreateToRelease = this.avg(releaseDurations); const avgUntilConclusion = this.avg(conclusionDurations); const avgCreateToSep = this.avg(createToSep); const avgSepToFat = this.avg(sepToFat); const avgFatToExp = this.avg(fatToExp); if(this.getEl('kpiTempoCriadoLiberado')) this.getEl('kpiTempoCriadoLiberado').textContent=this.formatHours(avgCreateToRelease); if(this.getEl('kpiTempoAteConcluir')) this.getEl('kpiTempoAteConcluir').textContent=this.formatHours(avgUntilConclusion); if(this.getEl('kpiTempoCriadoSeparacao')) this.getEl('kpiTempoCriadoSeparacao').textContent=this.formatHours(avgCreateToSep); if(this.getEl('kpiTempoSeparacaoFaturamento')) this.getEl('kpiTempoSeparacaoFaturamento').textContent=this.formatHours(avgSepToFat); if(this.getEl('kpiTempoFaturamentoExpedicao')) this.getEl('kpiTempoFaturamentoExpedicao').textContent=this.formatHours(avgFatToExp); if(this.getEl('kpiMgmtTotal')) this.getEl('kpiMgmtTotal').textContent=arr.length; if(this.getEl('kpiDoneMgmt')) this.getEl('kpiDoneMgmt').textContent=arr.filter(p => p.status==='CONCLUÍDO').length; if(this.getEl('kpiMgmtFaturadas')) this.getEl('kpiMgmtFaturadas').textContent=arr.filter(p => String(p.nf || '').trim()).length; if(this.getEl('kpiMgmtExp')) this.getEl('kpiMgmtExp').textContent=arr.filter(p => p.status==='EXPEDIDO').length; if(this.getEl('kpiMgmtChamados')) this.getEl('kpiMgmtChamados').textContent=arr.filter(p => p.status==='CHAMADO').length; if(this.getEl('kpiMgmtCancelados')) this.getEl('kpiMgmtCancelados').textContent=arr.filter(p => p.status==='CANCELADO').length; if(this.getEl('kpiUrgentes')) this.getEl('kpiUrgentes').textContent=arr.filter(p => p.urgente).length; },
+  renderPage3KPIs(){
+  const arr = this.getAllProcesses();
+
+  if(this.getEl('kpiMgmtTotal')) this.getEl('kpiMgmtTotal').textContent = arr.length;
+  if(this.getEl('kpiDoneMgmt')) this.getEl('kpiDoneMgmt').textContent = arr.filter(p => p.status === 'CONCLUÍDO').length;
+  if(this.getEl('kpiMgmtFaturadas')) this.getEl('kpiMgmtFaturadas').textContent = arr.filter(p => String(p.nf || '').trim()).length;
+  if(this.getEl('kpiMgmtExp')) this.getEl('kpiMgmtExp').textContent = arr.filter(p => p.status === 'EXPEDIDO').length;
+  if(this.getEl('kpiMgmtChamados')) this.getEl('kpiMgmtChamados').textContent = arr.filter(p => p.status === 'CHAMADO').length;
+  if(this.getEl('kpiMgmtCancelados')) this.getEl('kpiMgmtCancelados').textContent = arr.filter(p => p.status === 'CANCELADO').length;
+  if(this.getEl('kpiUrgentes')) this.getEl('kpiUrgentes').textContent = arr.filter(p => p.urgente).length;
+},
   openTimeKpiModal(type){ const arr = this.getAllProcesses(); let title = 'Lista'; let list = arr; if(type === 'createToRelease'){ title = 'Pedidos com liberação para expedição'; list = arr.filter(p => this.getReleaseTimestamp(p)); } if(type === 'untilConclusion'){ title = 'Pedidos concluídos'; list = arr.filter(p => p.status === 'CONCLUÍDO'); } if(type === 'createToSep'){ title = 'Pedidos com tempo entre criação e separação'; list = arr.filter(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO') !== null); } if(type === 'sepToFat'){ title = 'Pedidos com tempo entre separação e faturamento'; list = arr.filter(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA') !== null); } if(type === 'fatToExp'){ title = 'Pedidos com tempo entre faturamento e expedição'; list = arr.filter(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO') !== null); } if(type === 'done'){ title = 'Concluídos'; list = arr.filter(p => p.status === 'CONCLUÍDO'); } if(type === 'faturadas'){ title = 'Faturadas'; list = arr.filter(p => String(p.nf || '').trim()); } if(type === 'emExp'){ title = 'Em Expedição'; list = arr.filter(p => p.status === 'EXPEDIDO'); } if(type === 'chamados'){ title = 'Chamados'; list = arr.filter(p => p.status === 'CHAMADO'); } if(type === 'cancelados'){ title = 'Cancelados'; list = arr.filter(p => p.status === 'CANCELADO'); } if(type === 'urgent'){ title = 'Urgentes'; list = arr.filter(p => p.urgente); } if(type === 'totalProc'){ title = 'Total de Processos'; list = arr; } this.showProcessListModal(title, list); },
   renderPage3(){
   const body = this.getEl('page3TableBody');
@@ -873,13 +1091,47 @@ openCalledPrompt(process, mode='new'){
   renderArchivedBlocks(){ const wrap=this.getEl('archivedBlocksContainer'); if(!wrap) return; const term=this.normalizeText(this.getEl('archiveSearch')?.value || ''); const blocks=this.getArchivedBlocks().filter(block => { const bag=this.normalizeText([block.date, block.note, ...block.entries.map(e => [e.pedido,e.destinatario,e.nf,e.requisicao,e.obs,e.delayReason,e.cancelReason,e.calledInfo?.ticketNumber || '',e.calledInfo?.reason || '',e.calledInfo?.progressCurrent || ''].join(' '))].join(' ')); return !term || bag.includes(term); }); if(!blocks.length){ wrap.innerHTML='<div class="muted">Nenhum bloco arquivado encontrado.</div>'; return; } wrap.innerHTML=blocks.map(block => { const total=block.entries.length; const concl=block.entries.filter(e => e.status==='CONCLUÍDO').length; const exp=block.entries.filter(e => e.status==='EXPEDIDO').length; const urg=block.entries.filter(e => e.urgente).length; return `<details class="archive-card"><summary><div><div class="archive-summary-title">📁 Bloco ${this.fmtDate(block.date)}</div><div class="archive-summary-meta">${total} processo(s) • ${concl} concluído(s) • ${exp} em expedição • ${urg} urgente(s)</div></div><div class="toolbar no-print"><button class="btn btn-small" onclick="event.preventDefault(); App.printArchivedBlock(${block.id})">🖨️ Imprimir</button></div></summary><div class="archive-body"><div class="details-grid" style="margin:14px 0;"><div class="detail-box"><h5>Resumo do bloco</h5><pre>Data: ${this.fmtDate(block.date)}\nCriado em: ${this.fmtDateTime(block.createdAt)}\nFechado em: ${this.fmtDateTime(block.closedAt)}\nObservação: ${this.escapeHtml(block.note || 'Sem observação')}</pre></div><div class="detail-box"><h5>Histórico do bloco</h5><pre>${block.history.map(h => `${this.fmtDateTime(h.date)} - ${h.text}`).join('\n') || 'Sem histórico.'}</pre></div></div><div class="table-wrap"><table><thead><tr><th>Processo</th><th>Carga</th><th>Pedido / Cliente</th><th>Status</th><th>Coluna</th><th>Atual</th><th>Total</th><th>Urgente</th><th>Histórico</th></tr></thead><tbody>${block.entries.map(p => `<tr><td>${this.escapeHtml(p.processCode)}</td><td>${this.escapeHtml(p.carga || '-')}</td><td><b>${this.escapeHtml(p.pedido)}</b><br>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.getStatusBadge(p.status)}</td><td>${this.getStatusBadge(p.sharePointLane || 'SEM COLUNA')}</td><td>${this.formatHours(this.getCurrentHours(p))}</td><td>${this.formatHours(this.getTotalHours(p))}</td><td>${p.urgente ? '<span class="badge b-danger">SIM</span>' : '<span class="badge b-muted">NÃO</span>'}</td><td class="history-cell">${(p.history || []).map(h => `${this.fmtDateTime(h.date)} - ${this.escapeHtml(h.text)}`).join('<br>')}</td></tr>`).join('')}</tbody></table></div></div></details>`; }).join(''); },
 
   showSimpleModal(title, content){ const modal=this.getEl('detailsModal'); if(!modal) return; this.getEl('detailsTitle').textContent=title; this.getEl('detailsContent').innerHTML=content; modal.classList.add('show'); },
-  showProcessListModal(title,list){ const content=list.length ? `<div class="table-wrap"><table><thead><tr><th>Bloco</th><th>Processo</th><th>Pedido / Cliente</th><th>Status</th><th>Tempo Atual</th><th>Tempo Total</th></tr></thead><tbody>${list.map(p => `<tr><td>${this.escapeHtml(p.blockDate || '-')}</td><td>${this.escapeHtml(p.processCode)}</td><td><b>${this.escapeHtml(p.pedido)}</b><br>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.getStatusBadge(p.status)}</td><td>${this.formatHours(this.getCurrentHours(p))}</td><td>${this.formatHours(this.getTotalHours(p))}</td></tr>`).join('')}</tbody></table></div>` : '<div class="muted">Nenhum registro encontrado.</div>'; this.showSimpleModal(title,content); },
-  showDetails(processId){ const ref = this.getProcess(processId); if(!ref) return; const { process:p, block } = ref; const historyHtml = (p.history || []).map(h => `<li><b>${this.fmtDateTime(h.date)}</b> — ${this.escapeHtml(h.text)}</li>`).join('') || '<li>Nenhum histórico.</li>'; const timelineHtml = (p.stageTimeline || []).map(t => `<tr><td>${this.escapeHtml(t.status)}</td><td>${this.fmtDateTime(t.start)}</td><td>${this.fmtDateTime(t.end)}</td><td>${Number(t.durationHours || (t.end ? this.hoursBetween(t.start,t.end) : this.hoursBetween(t.start,null))).toFixed(1)}h</td></tr>`).join('') || '<tr><td colspan="4">Sem cronômetro.</td></tr>'; const chamadoBox = p.status === 'CHAMADO' || (p.calledInfo && (p.calledInfo.ticketNumber || p.calledInfo.reason || p.calledInfo.progressCurrent)) ? `<div class="detail-box"><h5>Dados do Chamado</h5><pre>Número: ${this.escapeHtml(p.calledInfo?.ticketNumber || '-')}\nMotivo: ${this.escapeHtml(p.calledInfo?.reason || '-')}\nAndamento atual: ${this.escapeHtml(p.calledInfo?.progressCurrent || '-')}\nÚltima atualização: ${this.fmtDateTime(p.calledUpdatedAt || '-')}</pre></div>` : ''; const cancelBox = p.cancelReason ? `<div class="detail-box"><h5>Motivo do Cancelamento</h5><pre>${this.escapeHtml(p.cancelReason)}</pre></div>` : ''; this.getEl('detailsTitle').textContent=`${p.processCode} • Pedido ${p.pedido}`; this.getEl('detailsContent').innerHTML=`<div class="card"><h3>Fluxo Visual do Pedido</h3>${this.renderStatusFlow(p)}</div><div class="details-grid"><div class="detail-box"><h5>Resumo</h5><pre>Bloco: ${this.escapeHtml(block.date)}\nStatus: ${this.escapeHtml(p.status)}\nColuna SharePoint: ${this.escapeHtml(p.sharePointLane || 'SEM COLUNA')}\nResponsável: ${this.escapeHtml(p.responsavel)}\nUrgente: ${p.urgente ? 'SIM' : 'NÃO'}</pre></div><div class="detail-box"><h5>Documentos</h5><pre>REQ: ${this.escapeHtml(p.requisicao || '-')}\nNF: ${this.escapeHtml(p.nf || '-')}\nData Emissão: ${this.escapeHtml(p.dataEmissao || '-')}\nValor NF: ${this.fmtMoney(p.valorNf || 0)}\nModal: ${this.escapeHtml(p.modal || '-')}</pre></div><div class="detail-box"><h5>Rastreabilidade</h5><pre>Criado: ${this.fmtDateTime(p.createdAt)}\nAtualizado: ${this.fmtDateTime(p.updatedAt)}\nData Entrada: ${this.escapeHtml(p.dataEntrada || '-')}\nOrigem: ${this.escapeHtml(p.origin || '-')}\nMotivo atraso: ${this.escapeHtml(p.delayReason || '-')}</pre></div>${chamadoBox}${cancelBox}</div><div class="card" style="margin-top:14px;"><h3>Cronômetro por Status</h3><div class="table-wrap"><table><thead><tr><th>Status</th><th>Início</th><th>Fim</th><th>Duração</th></tr></thead><tbody>${timelineHtml}</tbody></table></div></div><div class="card"><h3>Histórico Completo</h3><ul>${historyHtml}</ul></div>`; this.getEl('detailsModal').classList.add('show'); },
+  showProcessListModal(title,list){
+  const content = list.length ? `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Bloco</th>
+            <th>Processo</th>
+            <th>Pedido / Cliente</th>
+            <th>Status</th>
+            <th>Tempo Atual</th>
+            <th>Tempo Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${list.map(p => `
+            <tr>
+              <td>${this.escapeHtml(p.blockDate || '-')}</td>
+              <td>${this.escapeHtml(p.processCode || '-')}</td>
+              <td>
+                <b>${this.escapeHtml(p.pedido || '-')}</b><br>
+                ${this.escapeHtml(p.destinatario || '-')}
+              </td>
+              <td>${this.getStatusBadge(p.status)}</td>
+              <td>${this.formatHours(this.getCurrentHours(p))}</td>
+              <td>${this.formatHours(this.getTotalHours(p))}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  ` : '<div class="muted">Nenhum registro encontrado.</div>';
+
+  this.showSimpleModal(title, content);
+},
+  showDetails(processId){ const ref = this.getProcess(processId); if(!ref) return; const { process:p, block } = ref; const historyHtml = (p.history || []).map(h => `<li><b>${this.fmtDateTime(h.date)}</b> — ${this.escapeHtml(h.text)}</li>`).join('') || '<li>Nenhum histórico.</li>'; const timelineHtml = (p.stageTimeline || []).map(t => `<tr><td>${this.escapeHtml(t.status)}</td><td>${this.fmtDateTime(t.start)}</td><td>${this.fmtDateTime(t.end)}</td><td>${Number(t.durationHours || (t.end ? this.hoursBetween(t.start,t.end) : this.hoursBetween(t.start,null))).toFixed(1)}h</td></tr>`).join('') || '<tr><td colspan="4">Sem cronômetro.</td></tr>'; const chamadoBox = p.status === 'CHAMADO' || (p.calledInfo && (p.calledInfo.ticketNumber || p.calledInfo.reason || p.calledInfo.progressCurrent)) ? `<div class="detail-box"><h5>Dados do Chamado</h5><pre>Número: ${this.escapeHtml(p.calledInfo?.ticketNumber || '-')}\nMotivo: ${this.escapeHtml(p.calledInfo?.reason || '-')}\nAndamento atual: ${this.escapeHtml(p.calledInfo?.progressCurrent || '-')}\nÚltima atualização: ${this.fmtDateTime(p.calledUpdatedAt || '-')}</pre></div>` : ''; const cancelBox = p.cancelReason ? `<div class="detail-box"><h5>Motivo do Cancelamento</h5><pre>${this.escapeHtml(p.cancelReason)}</pre></div>` : ''; this.getEl('detailsTitle').textContent=`${p.processCode} • Pedido ${p.pedido}`; this.getEl('detailsContent').innerHTML=`<div class="card"><h3>Fluxo Visual do Pedido</h3>${this.renderStatusFlow(p)}</div><div class="details-grid"><div class="detail-box"><h5>Resumo</h5><pre>Bloco: ${this.escapeHtml(block.date)}\nStatus: ${this.escapeHtml(p.status)}\nColuna SharePoint: ${this.escapeHtml(p.sharePointLane || 'SEM COLUNA')}\nResponsável: ${this.escapeHtml(p.responsavel)}\nUrgente: ${p.urgente ? 'SIM' : 'NÃO'}\nConferido: ${p.conferido ? 'SIM' : 'NÃO'}\nLOG: ${p.isLog ? 'SIM' : 'NÃO'}</pre></div><div class="detail-box"><h5>Documentos</h5><pre>REQ: ${this.escapeHtml(p.requisicao || '-')}\nNF: ${this.escapeHtml(p.nf || '-')}\nData Emissão: ${this.escapeHtml(p.dataEmissao || '-')}\nValor NF: ${this.fmtMoney(p.valorNf || 0)}\nModal: ${this.escapeHtml(p.modal || '-')}</pre></div><div class="detail-box"><h5>Rastreabilidade</h5><pre>Criado: ${this.fmtDateTime(p.createdAt)}\nAtualizado: ${this.fmtDateTime(p.updatedAt)}\nData Entrada: ${this.escapeHtml(p.dataEntrada || '-')}\nOrigem: ${this.escapeHtml(p.origin || '-')}\nMotivo atraso: ${this.escapeHtml(p.delayReason || '-')}</pre></div>${chamadoBox}${cancelBox}</div><div class="card" style="margin-top:14px;"><h3>Cronômetro por Status</h3><div class="table-wrap"><table><thead><tr><th>Status</th><th>Início</th><th>Fim</th><th>Duração</th></tr></thead><tbody>${timelineHtml}</tbody></table></div></div><div class="card"><h3>Histórico Completo</h3><ul>${historyHtml}</ul></div>`; this.getEl('detailsModal').classList.add('show'); },
   closeDetails(){ const modal=this.getEl('detailsModal'); if(modal) modal.classList.remove('show'); },
 
   exportJSON(){ const blob=new Blob([JSON.stringify(this.db,null,2)], {type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mdr_ecosystem_consolidado_${this.toDateInput(new Date())}.json`; a.click(); URL.revokeObjectURL(a.href); },
   importJSON(event){ const file=event.target.files?.[0]; if(!file) return; const reader=new FileReader(); reader.onload = ev => { try{ const data=JSON.parse(ev.target.result); if(!data || typeof data !== 'object') throw new Error('JSON inválido'); this.db.blocks=Array.isArray(data.blocks) ? data.blocks : []; this.db.analyses=Array.isArray(data.analyses) ? data.analyses : []; this.db.imports=Array.isArray(data.imports) ? data.imports : []; this.db.activeBlockId=data.activeBlockId || null; this.db.counters=data.counters || { processSeq: 0, analysisSeq: 0 }; this.migrateData(); this.ensureDefaults(); this.renderAll(); this.saveSafe(); alert('Base importada com sucesso.'); }catch(err){ console.error(err); alert('Falha ao importar JSON.'); } }; reader.readAsText(file); event.target.value=''; },
-  exportCSV(){ const headers=['blocoData','processCode','dataEntrada','responsavel','operacao','carga','pedido','destinatario','uf','urgente','requisicao','nf','valorNf','dataEmissao','status','sharePointLane','modal','obs','motivoAtraso','cancelReason','calledTicket','calledReason','calledProgress']; const rows=this.getAllProcesses().map(p => [p.blockDate,p.processCode,p.dataEntrada,p.responsavel,p.operacao,p.carga,p.pedido,p.destinatario,p.uf,p.urgente?'SIM':'NAO',p.requisicao,p.nf,p.valorNf,p.dataEmissao,p.status,p.sharePointLane,p.modal,p.obs,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || '']); const csv='\uFEFF' + headers.join(';') + '\n' + rows.map(r => r.map(v => this.toCSVSafe(v)).join(';')).join('\n'); const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mdr_ecosystem_consolidado_${this.toDateInput(new Date())}.csv`; a.click(); URL.revokeObjectURL(a.href); },
+  exportCSV(){ const headers=['blocoData','processCode','dataEntrada','responsavel','operacao','carga','pedido','destinatario','uf','urgente','requisicao','nf','valorNf','dataEmissao','status','sharePointLane','conferido','isLog','modal','obs','motivoAtraso','cancelReason','calledTicket','calledReason','calledProgress']; const rows=this.getAllProcesses().map(p => [p.blockDate,p.processCode,p.dataEntrada,p.responsavel,p.operacao,p.carga,p.pedido,p.destinatario,p.uf,p.urgente?'SIM':'NAO',p.requisicao,p.nf,p.valorNf,p.dataEmissao,p.status,p.sharePointLane,p.conferido?'SIM':'NAO',p.isLog?'SIM':'NAO',p.modal,p.obs,p.delayReason,p.cancelReason,p.calledInfo?.ticketNumber || '',p.calledInfo?.reason || '',p.calledInfo?.progressCurrent || '']); const csv='\uFEFF' + headers.join(';') + '\n' + rows.map(r => r.map(v => this.toCSVSafe(v)).join(';')).join('\n'); const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`mdr_ecosystem_consolidado_${this.toDateInput(new Date())}.csv`; a.click(); URL.revokeObjectURL(a.href); },
   importCSV(event){ const file = event.target.files?.[0]; if(!file) return; const reader = new FileReader(); reader.onload = ev => { try{ const text = String(ev.target.result || '').replace(/\r/g,''); const lines = text.split('\n').filter(Boolean); if(lines.length < 2) throw new Error('CSV sem dados.'); const delimiter = (lines[0].match(/;/g) || []).length >= (lines[0].match(/,/g) || []).length ? ';' : ','; const headers = this.parseCsvLine(lines[0], delimiter).map(h => this.normalizeHeader(h)); const batchId = Date.now(); let ok = 0; let fail = 0; const errors = []; for(let i = 1; i < lines.length; i++){ const cells = this.parseCsvLine(lines[i], delimiter); if(!cells.join('').trim()) continue; const row = {}; headers.forEach((h,idx) => row[h] = cells[idx] ?? ''); const pedido = this.getImportedValue(row, this.csvFieldAliases.pedido); if(!pedido){ fail++; errors.push(`Linha ${i+1}: pedido ausente.`); continue; } const dataEntradaRaw = this.getImportedValue(row, this.csvFieldAliases.dataEntrada); const dateNormalized = this.parseDateFlex(dataEntradaRaw || this.toDateInput(new Date())); let block = this.getOpenBlockByDate(dateNormalized); if(!block){ if(this.db.blocks.find(b => b.date === dateNormalized && b.archived)){ fail++; errors.push(`Linha ${i+1}: já existe bloco FECHADO na data ${dateNormalized}.`); continue; } block = this.createBlock(dateNormalized, 'Criado por importação CSV'); } if(!block){ fail++; errors.push(`Linha ${i+1}: não foi possível criar ou localizar o bloco da data ${dateNormalized}.`); continue; } const existingLocal = block.entries.find(p => this.normalizeText(p.pedido)===this.normalizeText(pedido)); const existingPedidoGlobal = this.getDuplicatePedido(pedido, existingLocal ? existingLocal.id : null); const nfCandidate = this.getImportedValue(row, this.csvFieldAliases.nf); const existingNfGlobal = nfCandidate ? this.getDuplicateNf(nfCandidate, existingLocal ? existingLocal.id : null) : null; if(existingPedidoGlobal){ fail++; errors.push(`Linha ${i+1}: pedido repetido ${pedido} já existe em outro bloco.`); continue; } if(existingNfGlobal){ fail++; errors.push(`Linha ${i+1}: NF repetida ${nfCandidate} já existe no pedido ${existingNfGlobal.pedido}.`); continue; } const rawStatus = this.normalizeStatus(this.getImportedValue(row, this.csvFieldAliases.status)); const selectedStatus = this.statuses.includes(rawStatus) ? rawStatus : 'AGUARDANDO REQUISIÇÃO'; const effectiveStatus = selectedStatus === 'NOVO' ? 'AGUARDANDO REQUISIÇÃO' : selectedStatus; const incoming = { dataEntrada: dateNormalized, responsavel: this.getImportedValue(row, this.csvFieldAliases.responsavel) || 'IMPORTAÇÃO', operacao: this.getImportedValue(row, this.csvFieldAliases.operacao) || 'VENDA', carga: this.getImportedValue(row, this.csvFieldAliases.carga), pedido, destinatario: this.getImportedValue(row, this.csvFieldAliases.destinatario), uf: this.getImportedValue(row, this.csvFieldAliases.uf).toUpperCase(), urgente: this.normalizeText(this.getImportedValue(row, this.csvFieldAliases.urgente)) === 'SIM', requisicao: this.getImportedValue(row, this.csvFieldAliases.requisicao), nf: nfCandidate, valorNf: this.parseMoneyFlex(this.getImportedValue(row, this.csvFieldAliases.valor)), dataEmissao: this.parseDateFlex(this.getImportedValue(row, this.csvFieldAliases.dataEmissao)), status: effectiveStatus, sharePointLane: this.normalizeLane(this.getImportedValue(row, this.csvFieldAliases.sharePointLane)) || '', obs: this.getImportedValue(row, this.csvFieldAliases.observacao), delayReason: this.getImportedValue(row, this.csvFieldAliases.motivoAtraso) }; if(existingLocal){ Object.assign(existingLocal, incoming); existingLocal.updatedAt = this.nowIso(); existingLocal.modal = this.calculateModal(existingLocal.uf, existingLocal.nf); existingLocal.sharePointLane = this.deriveLaneFromFields(existingLocal) || existingLocal.sharePointLane || ''; existingLocal.history.unshift(this.makeHistory('IMPORTACAO', 'Processo atualizado por importação CSV (upsert).', {batchId})); const currentOpen = [...(existingLocal.stageTimeline || [])].reverse().find(t => !t.end); if(currentOpen && currentOpen.status !== existingLocal.status){ this.closeCurrentTimelineStage(existingLocal); this.openNewTimelineStage(existingLocal, existingLocal.status); } if(!existingLocal.stageTimeline || !existingLocal.stageTimeline.length){ existingLocal.currentStatusStartedAt = this.nowIso(); existingLocal.stageTimeline = [{ id: Date.now()+i+2000, status: existingLocal.status, start: existingLocal.currentStatusStartedAt, end: null, durationHours: 0 }]; } } else { const process = { id: Date.now()+i+Math.floor(Math.random()*1000), processCode: this.nextProcessCode(), createdAt: this.nowIso(), updatedAt: this.nowIso(), finishedAt: ['CONCLUÍDO','CHAMADO','CANCELADO'].includes(incoming.status) ? this.nowIso() : null, previousStatus: selectedStatus, modal: this.calculateModal(incoming.uf, incoming.nf), history: [], stageTimeline: [], currentStatusStartedAt: this.nowIso(), origin: 'RELATÓRIO', conferenciaData: '', conferenciaAssinatura: '', expedicaoData: '', expedicaoAssinatura: '', delayReasonRequestedAt: '', calledInfo:{ ticketNumber:'', reason:'', progressCurrent:'', progressHistory:[] }, calledUpdatedAt:'', calledLastReminderAt:'', cancelReason:'', ...incoming }; process.history.unshift(this.makeHistory('IMPORTACAO', 'Processo criado por importação CSV.', {batchId})); if(selectedStatus === 'NOVO') process.history.unshift(this.makeHistory('REGRA', 'Status NOVO convertido para AGUARDANDO REQUISIÇÃO na importação.')); process.sharePointLane = this.deriveLaneFromFields(process) || process.sharePointLane || ''; process.stageTimeline.push({ id: Date.now()+i+1000, status: process.status, start: process.currentStatusStartedAt, end: null, durationHours: 0 }); block.entries.unshift(process); } block.history.unshift(this.makeHistory('IMPORTACAO', `Pedido ${pedido} processado por importação CSV.`)); ok++; } this.db.imports.unshift({ id: batchId, fileName: file.name, createdAt: this.nowIso(), ok, fail, errors }); if(!this.db.activeBlockId){ const first = this.getOpenBlocks()[0]; if(first) this.db.activeBlockId = first.id; } this.renderAll(); this.saveSafe(); const errorPreview = errors.slice(0, 8).join('\n'); alert(`Importação concluída.\n\nVálidos: ${ok}\nErros: ${fail}` + (errors.length ? `\n\nPrimeiros erros:\n${errorPreview}` : '')); }catch(err){ console.error(err); alert('Falha ao importar CSV.'); } }; reader.readAsText(file, 'utf-8'); event.target.value = ''; },
   downloadCsvTemplate(){ const headers = ['pedido','destinatario','uf','requisicao','nf','valor','status','operacao','dataEntrada','responsavel','carga','urgente','observacao','dataEmissao','sharePointLane','motivoAtraso']; const sample = ['45001234','Hospital Exemplo','PE','REQ123','NF8899','1500,00','AGUARDANDO REQUISIÇÃO','VENDA',this.toDateInput(new Date()),'JOÃO VICTOR','CARGA-01','NAO','Exemplo de importação','','','']; const csv = '\uFEFF' + headers.join(';') + '\n' + sample.map(v => this.toCSVSafe(v)).join(';'); const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'modelo_importacao_mdr_ecosystem.csv'; a.click(); URL.revokeObjectURL(a.href); },
 
@@ -1018,6 +1270,8 @@ printBlockExpedition(block, statusFilter=''){
       <td>${this.fmtMoney(p.valorNf || 0)}</td>
       <td>${this.escapeHtml(p.modal || '-')}</td>
       <td>${this.escapeHtml(p.status || '-')}</td>
+      <td>${p.conferido ? 'SIM' : 'NÃO'}</td>
+      <td>${p.isLog ? 'SIM' : 'NÃO'}</td>
       <td>${this.escapeHtml(p.obs || '-')}</td>
       <td>
         <div class="fill-box">
@@ -1106,13 +1360,14 @@ printBlockExpedition(block, statusFilter=''){
             <th>Valor NF</th>
             <th>Modal</th>
             <th>Status</th>
-            <th>Observação</th>
             <th>Conferência</th>
-            <th>Expedição</th>
+            <th>LOG</th>
+            <th>Histórico</th>
+            <th>Observação</th>
           </tr>
         </thead>
         <tbody>
-          ${rows || `<tr><td colspan="11">Nenhum pedido para o filtro informado.</td></tr>`}
+          ${rows || `<tr><td colspan="13">Nenhum pedido para o filtro informado.</td></tr>`}
         </tbody>
       </table>
     </body>
@@ -1155,6 +1410,8 @@ printBlockManagement(block, statusFilter=''){
       <td>${this.fmtMoney(p.valorNf || 0)}</td>
       <td>${this.escapeHtml(p.modal || '-')}</td>
       <td>${this.escapeHtml(p.status || '-')}</td>
+      <td>${p.conferido ? 'SIM' : 'NÃO'}</td>
+      <td>${p.isLog ? 'SIM' : 'NÃO'}</td>
       <td><small>${this.buildPrintTimeline(p)}</small></td>
       <td>${this.escapeHtml(p.obs || '-')}</td>
     </tr>
@@ -1216,12 +1473,14 @@ printBlockManagement(block, statusFilter=''){
             <th>Valor NF</th>
             <th>Modal</th>
             <th>Status Atual</th>
+            <th>Conferência</th>
+            <th>LOG</th>
             <th>Histórico de Status / Tempo</th>
             <th>Observação</th>
           </tr>
         </thead>
         <tbody>
-          ${rows || `<tr><td colspan="10">Nenhum pedido para o filtro informado.</td></tr>`}
+          ${rows || `<tr><td colspan="12">Nenhum pedido para o filtro informado.</td></tr>`}
         </tbody>
       </table>
     </body>
@@ -1230,7 +1489,71 @@ printBlockManagement(block, statusFilter=''){
 
   w.document.close();
 },
-  printManagerReport(){ const all = this.getAllProcesses(); const pendReq = all.filter(p => !String(p.requisicao || '').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status)); const pendFat = all.filter(p => this.isBillingPending(p)); const concl = all.filter(p => p.status === 'CONCLUÍDO'); const urg = all.filter(p => p.urgente); const chamados = all.filter(p => p.status === 'CHAMADO'); const cancelados = all.filter(p => p.status === 'CANCELADO'); const avgCreateToSep = this.avg(all.map(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO')).filter(v => v !== null)); const avgSepToFat = this.avg(all.map(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA')).filter(v => v !== null)); const avgFatToExp = this.avg(all.map(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO')).filter(v => v !== null)); const criticalRows = pendFat.slice(0, 30).map(p => `<tr><td>${this.escapeHtml(p.blockDate || '-')}</td><td>${this.escapeHtml(p.processCode)}</td><td>${this.escapeHtml(p.pedido)}</td><td>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.escapeHtml(p.status)}</td><td>${this.escapeHtml(p.delayReason || '-')}</td></tr>`).join(''); const win = window.open('', '_blank'); win.document.write(`<html><head><title>Relatório Gerencial MDR Ecosystem</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111827}h1,h2{margin:0 0 12px}.muted{color:#64748b}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.box{border:1px solid #cbd5e1;border-radius:8px;padding:12px;background:#f8fafc}.box b{display:block;font-size:11px;color:#475569;text-transform:uppercase;margin-bottom:6px}.box span{font-size:18px;font-weight:bold}.section{margin-top:24px}table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid #cbd5e1;padding:8px;vertical-align:top}th{background:#f1f5f9}button{padding:10px 14px;border:none;background:#2563eb;color:#fff;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:14px}</style></head><body><button onclick="window.print()">🖨️ Imprimir</button><h1>Relatório Gerencial MDR Ecosystem</h1><div class="muted">Gerado em ${this.fmtDateTime(this.nowIso())}</div><div class="summary"><div class="box"><b>Total de Processos</b><span>${all.length}</span></div><div class="box"><b>Concluídos</b><span>${concl.length}</span></div><div class="box"><b>Pendentes de Requisição</b><span>${pendReq.length}</span></div><div class="box"><b>Pendentes de Faturamento</b><span>${pendFat.length}</span></div><div class="box"><b>Urgentes</b><span>${urg.length}</span></div><div class="box"><b>Chamados</b><span>${chamados.length}</span></div><div class="box"><b>Cancelados</b><span>${cancelados.length}</span></div><div class="box"><b>Tempo Médio Criado → Separação</b><span>${this.formatHours(avgCreateToSep)}</span></div><div class="box"><b>Tempo Médio Separação → Faturamento</b><span>${this.formatHours(avgSepToFat)}</span></div><div class="box"><b>Tempo Médio Faturamento → Expedição</b><span>${this.formatHours(avgFatToExp)}</span></div></div><div class="section"><h2>Pendências Críticas de Faturamento</h2><table><thead><tr><th>Bloco</th><th>Processo</th><th>Pedido</th><th>Cliente</th><th>Status</th><th>Motivo do Atraso</th></tr></thead><tbody>${criticalRows || `<tr><td colspan="6">Nenhuma pendência crítica.</td></tr>`}</tbody></table></div></body></html>`); win.document.close(); },
+  printManagerReport(){
+    const all = this.getAllProcesses();
+    const pendReq = all.filter(p => !String(p.requisicao || '').trim() && !['CONCLUÍDO','CHAMADO','CANCELADO'].includes(p.status));
+    const pendFat = all.filter(p => this.isBillingPending(p));
+    const concl = all.filter(p => p.status === 'CONCLUÍDO');
+    const urg = all.filter(p => p.urgente);
+    const chamados = all.filter(p => p.status === 'CHAMADO');
+    const cancelados = all.filter(p => p.status === 'CANCELADO');
+    const avgCreateToSep = this.avg(all.map(p => this.getDurationBetweenStages(p, 'AGUARDANDO REQUISIÇÃO', 'EM SEPARAÇÃO')).filter(v => v !== null));
+    const avgSepToFat = this.avg(all.map(p => this.getDurationBetweenStages(p, 'EM SEPARAÇÃO', 'NF INFORMADA')).filter(v => v !== null));
+    const avgFatToExp = this.avg(all.map(p => this.getDurationBetweenStages(p, 'NF INFORMADA', 'EXPEDIDO')).filter(v => v !== null));
+    const criticalRows = pendFat.slice(0, 30)
+      .map(p => `<tr><td>${this.escapeHtml(p.blockDate || '-')}</td><td>${this.escapeHtml(p.processCode)}</td><td>${this.escapeHtml(p.pedido)}</td><td>${this.escapeHtml(p.destinatario || '-')}</td><td>${this.escapeHtml(p.status)}</td><td>${this.escapeHtml(p.delayReason || '-')}</td></tr>`)
+      .join('');
+
+    const win = window.open('', '_blank');
+    win.document.write(`
+      <html>
+        <head>
+          <title>Relatório Gerencial MDR Ecosystem</title>
+          <style>
+            body{font-family:Arial,sans-serif;padding:24px;color:#111827}
+            h1,h2{margin:0 0 12px}
+            .muted{color:#64748b}
+            .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+            .box{border:1px solid #cbd5e1;border-radius:8px;padding:12px;background:#f8fafc}
+            .box b{display:block;font-size:11px;color:#475569;text-transform:uppercase;margin-bottom:6px}
+            .box span{font-size:18px;font-weight:bold}
+            .section{margin-top:24px}
+            table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+            th,td{border:1px solid #cbd5e1;padding:8px;vertical-align:top}
+            th{background:#f1f5f9}
+            button{padding:10px 14px;border:none;background:#2563eb;color:#fff;border-radius:8px;cursor:pointer;font-weight:bold;margin-bottom:14px}
+          </style>
+        </head>
+        <body>
+          <button onclick="window.print()">🖨️ Imprimir</button>
+          <h1>Relatório Gerencial MDR Ecosystem</h1>
+          <div class="muted">Gerado em ${this.fmtDateTime(this.nowIso())}</div>
+          <div class="summary">
+            <div class="box"><b>Total de Processos</b><span>${all.length}</span></div>
+            <div class="box"><b>Concluídos</b><span>${concl.length}</span></div>
+            <div class="box"><b>Pendentes de Requisição</b><span>${pendReq.length}</span></div>
+            <div class="box"><b>Pendentes de Faturamento</b><span>${pendFat.length}</span></div>
+            <div class="box"><b>Urgentes</b><span>${urg.length}</span></div>
+            <div class="box"><b>Chamados</b><span>${chamados.length}</span></div>
+            <div class="box"><b>Cancelados</b><span>${cancelados.length}</span></div>
+            <div class="box"><b>Tempo Médio Criado → Separação</b><span>${this.formatHours(avgCreateToSep)}</span></div>
+            <div class="box"><b>Tempo Médio Separação → Faturamento</b><span>${this.formatHours(avgSepToFat)}</span></div>
+            <div class="box"><b>Tempo Médio Faturamento → Expedição</b><span>${this.formatHours(avgFatToExp)}</span></div>
+          </div>
+          <div class="section">
+            <h2>Pendências Críticas de Faturamento</h2>
+            <table>
+              <thead>
+                <tr><th>Bloco</th><th>Processo</th><th>Pedido</th><th>Cliente</th><th>Status</th><th>Motivo do Atraso</th></tr>
+              </thead>
+              <tbody>${criticalRows || '<tr><td colspan="6">Nenhuma pendência crítica.</td></tr>'}</tbody>
+            </table>
+          </div>
+        </body>
+      </html>
+    `);
+    win.document.close();
+  },
   resetAll(){
   if(!confirm('Deseja apagar toda a base local do MDR Ecosystem?')) return;
 
@@ -1271,7 +1594,7 @@ if (typeof document !== 'undefined') {
   </script>
 
   <script>
-const API_BASE = 'http://10.100.20.142:5001';
+const API_BASE = 'http://10.100.20.142:5501';
 
  
 App.getServerPayload = function () {

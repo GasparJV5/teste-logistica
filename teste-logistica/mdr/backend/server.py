@@ -314,6 +314,6 @@ if __name__ == "__main__":
     print(f"Backup: {BACKUP_PATH}")
     print(f"Frontend: {FRONTEND_DIR}")
     print(f"Main HTML: {MAIN_HTML}")
-    print("API teste rodando em: http://0.0.0.0:5001")
+    print("API teste rodando em: http://0.0.0.0:5501")
     print("================================")
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5501, debug=True)
